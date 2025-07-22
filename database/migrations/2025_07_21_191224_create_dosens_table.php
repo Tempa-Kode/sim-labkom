@@ -13,13 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('tb_pengguna', function (Blueprint $table) {
+        Schema::create('tb_dosen', function (Blueprint $table) {
             $table->id();
-            $table->string('nama', 100);
-            $table->string('username', 50)->unique();
-            $table->string('password');
-            $table->enum('hak_akses', ['admin', 'aslab'])->default('aslab');
-            $table->string('foto', 100)->nullable();
+            $table->string('nama_dosen', 100);
         });
     }
 
@@ -30,6 +26,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tb_pengguna');
+        Schema::dropIfExists('tb_dosen');
     }
 };
