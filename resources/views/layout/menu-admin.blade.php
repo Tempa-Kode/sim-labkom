@@ -12,8 +12,8 @@
     </a>
 </li>
 
-<li class="menu-item">
-    <a href="index.html" class="menu-link">
+<li class="menu-item {{ Route::currentRouteNamed('pengguna.index') ? 'active' : '' }}">
+    <a href="{{ route('pengguna.index') }}" class="menu-link">
         <i class="fa-solid fa-users me-4"></i>
         <div data-i18n="Analytics">Daftar Akun</div>
     </a>

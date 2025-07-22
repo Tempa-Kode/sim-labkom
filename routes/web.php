@@ -32,4 +32,12 @@ Route::prefix('dashboard')->middleware(['auth'])->group(function () {
     Route::put('/profil/updateFoto', [ProfilController::class, 'updateFoto'])->name('profil.updateFoto');
     Route::get('/profil/ubah-password', [ProfilController::class, 'ubahPassword'])->name('profil.ubahPassword');
     Route::put('/profil/ubah-password', [ProfilController::class, 'updatePassword'])->name('profil.updatePassword');
+
+    Route::prefix('/pengguna')->group(function () {
+        Route::get('/', [App\Http\Controllers\PenggunaController::class, 'index'])->name('pengguna.index');
+        Route::delete('/{user:id}', [App\Http\Controllers\PenggunaController::class, 'hapus'])->name('pengguna.hapus');
+        Route::post('/tambah', [App\Http\Controllers\PenggunaController::class, 'tambah'])->name('pengguna.tambah');
+        Route::get('/edit/{user:id}', [App\Http\Controllers\PenggunaController::class, 'edit'])->name('pengguna.edit');
+        Route::put('/update/{user:id}', [App\Http\Controllers\PenggunaController::class, 'update'])->name('pengguna.update');
+    });
 });

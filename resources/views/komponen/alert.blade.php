@@ -1,3 +1,15 @@
+{{-- Alert Validasi Inputan --}}
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+{{-- Alert Validasi Inputan --}}
+
 {{-- Success Alert --}}
 @if (session('success'))
     <div class="alert alert-success alert-dismissible" role="alert">
