@@ -41,12 +41,12 @@
 </li>
 
 <li class="menu-item">
-    <a
-        href="https://themeselection.com/demo/sneat-bootstrap-html-admin-template/documentation/"
-        target="_blank"
-        class="menu-link"
-    >
+    <a href="#" class="menu-link" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
         <i class="fa-solid fa-power-off me-4"></i>
         <div data-i18n="Documentation">Logout</div>
     </a>
 </li>
+
+<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+    @csrf
+</form>

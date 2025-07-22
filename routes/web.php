@@ -21,6 +21,8 @@ Route::get('/login', function () { return view('login'); })->name('login');
 Route::post('/prosesLogin', [App\Http\Controllers\AutentikasiController::class, 'prosesLogin'])->name('prosesLogin');
 Route::post('/logout', [App\Http\Controllers\AutentikasiController::class, 'logout'])->name('logout');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
+Route::prefix('dashboard')->middleware(['auth'])->group(function () {
+    Route::get('/', function () {
+        return view('dashboard');
+    })->name('dashboard');
+});
