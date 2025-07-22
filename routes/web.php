@@ -49,4 +49,13 @@ Route::prefix('dashboard')->middleware(['auth'])->group(function () {
         Route::put('/update/{ruangLab:id}', [App\Http\Controllers\RuangLabController::class, 'update'])->name('ruangLab.update');
         Route::delete('/{ruangLab:id}', [App\Http\Controllers\RuangLabController::class, 'hapus'])->name('ruangLab.hapus');
     });
+
+    Route::prefix('/jadwal-lab')->group(function () {
+        Route::get('/', [App\Http\Controllers\JadwalLabController::class, 'index'])->name('jadwalLab.index');
+        Route::get('/tambah', [App\Http\Controllers\JadwalLabController::class, 'tambah'])->name('jadwalLab.tambah');
+        Route::post('/simpan', [App\Http\Controllers\JadwalLabController::class, 'simpan'])->name('jadwalLab.simpan');
+        Route::get('/edit/{id}', [App\Http\Controllers\JadwalLabController::class, 'edit'])->name('jadwalLab.edit');
+        Route::put('/update/{id}', [App\Http\Controllers\JadwalLabController::class, 'update'])->name('jadwalLab.update');
+        Route::delete('/{id}', [App\Http\Controllers\JadwalLabController::class, 'hapus'])->name('jadwalLab.hapus');
+    });
 });
