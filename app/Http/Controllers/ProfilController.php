@@ -92,10 +92,14 @@ class ProfilController extends Controller
     {
         $request->validate([
             'password' => 'required|string|min:8|confirmed',
+            'password_lama' => 'required|string|current_password|min:8',
         ], [
             'password.required' => 'Password harus diisi',
             'password.min' => 'Password minimal 8 karakter',
             'password.confirmed' => 'Konfirmasi password tidak cocok',
+            'password_lama.current_password' => 'Password lama tidak cocok',
+            'password_lama.required' => 'Password lama harus diisi',
+            'password_lama.min' => 'Password lama minimal 8 karakter',
         ]);
 
         DB::beginTransaction();

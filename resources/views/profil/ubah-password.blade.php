@@ -21,7 +21,27 @@
                             <div class="row">
                                 <div class="mb-3">
                                     <div class="d-flex justify-content-between">
-                                        <label class="form-label" for="password">Password</label>
+                                        <label class="form-label" for="password">Password Lama</label>
+                                    </div>
+                                    <div class="input-group input-group-merge">
+                                        <input
+                                            type="password"
+                                            id="password_lama"
+                                            class="form-control @error('password_lama') is-invalid @enderror"
+                                            name="password_lama"
+                                            placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+                                            aria-describedby="password_lama"
+                                        />
+                                        @error('password_lama')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="d-flex justify-content-between">
+                                        <label class="form-label" for="password">Password Baru</label>
                                     </div>
                                     <div class="input-group input-group-merge">
                                         <input
@@ -41,7 +61,7 @@
                                 </div>
                                 <div class="mb-3">
                                     <div class="d-flex justify-content-between">
-                                        <label class="form-label" for="password">Konfirmasi Password</label>
+                                        <label class="form-label" for="password">Konfirmasi Password Baru</label>
                                     </div>
                                     <div class="input-group input-group-merge">
                                         <input
