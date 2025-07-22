@@ -40,4 +40,13 @@ Route::prefix('dashboard')->middleware(['auth'])->group(function () {
         Route::get('/edit/{user:id}', [App\Http\Controllers\PenggunaController::class, 'edit'])->name('pengguna.edit');
         Route::put('/update/{user:id}', [App\Http\Controllers\PenggunaController::class, 'update'])->name('pengguna.update');
     });
+
+    Route::prefix('/ruang-lab')->group(function () {
+        Route::get('/', [App\Http\Controllers\RuangLabController::class, 'index'])->name('ruangLab.index');
+        Route::get('/tambah', [App\Http\Controllers\RuangLabController::class, 'tambah'])->name('ruangLab.tambah');
+        Route::post('/simpan', [App\Http\Controllers\RuangLabController::class, 'simpan'])->name('ruangLab.simpan');
+        Route::get('/edit/{ruangLab:id}', [App\Http\Controllers\RuangLabController::class, 'edit'])->name('ruangLab.edit');
+        Route::put('/update/{ruangLab:id}', [App\Http\Controllers\RuangLabController::class, 'update'])->name('ruangLab.update');
+        Route::delete('/{ruangLab:id}', [App\Http\Controllers\RuangLabController::class, 'hapus'])->name('ruangLab.hapus');
+    });
 });

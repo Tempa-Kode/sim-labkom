@@ -145,7 +145,7 @@
             @yield('konten')
 
             <!-- Footer -->
-            <footer class="content-footer footer bg-primary text-white py-2 fixed-bottom" style="z-index: 10000000000000;">
+            <footer class="content-footer footerpy-2 fixed-bottom">
               <div class="container-xxl d-flex flex-wrap justify-content-center py-2 flex-md-row flex-column">
                 <div class="mb-2 mb-md-0 text-center">
                   ©

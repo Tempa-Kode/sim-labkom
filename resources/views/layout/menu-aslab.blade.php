@@ -19,6 +19,15 @@
     </a>
 </li>
 
+<li class="menu-header small text-uppercase">
+    <span class="menu-header-text">Data Laboratorium</span>
+</li>
+<li class="menu-item {{ Route::currentRouteNamed('ruangLab.index') ? 'active' : '' }}">
+    <a href="{{ route('ruangLab.index') }}" class="menu-link">
+        <i class="fa-solid fa-door-open me-4"></i>
+        <div data-i18n="Analytics">Data Ruang Lab</div>
+    </a>
+</li>
 <li class="menu-item">
     <a href="index.html" class="menu-link">
         <i class="fa-solid fa-warehouse me-4"></i>
@@ -33,6 +42,9 @@
     </a>
 </li>
 
+<li class="menu-header small text-uppercase">
+    <span class="menu-header-text">Lainnya</span>
+</li>
 <li class="menu-item">
     <a href="#" class="menu-link" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
         <i class="fa-solid fa-power-off me-4"></i>
