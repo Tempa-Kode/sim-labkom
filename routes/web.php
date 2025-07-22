@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ProfilController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,4 +26,10 @@ Route::prefix('dashboard')->middleware(['auth'])->group(function () {
     Route::get('/', function () {
         return view('dashboard');
     })->name('dashboard');
+
+    Route::get('/profil', [ProfilController::class, 'index'])->name('profil.index');
+    Route::put('/profil', [ProfilController::class, 'update'])->name('profil.update');
+    Route::put('/profil/updateFoto', [ProfilController::class, 'updateFoto'])->name('profil.updateFoto');
+    Route::get('/profil/ubah-password', [ProfilController::class, 'ubahPassword'])->name('profil.ubahPassword');
+    Route::put('/profil/ubah-password', [ProfilController::class, 'updatePassword'])->name('profil.updatePassword');
 });
