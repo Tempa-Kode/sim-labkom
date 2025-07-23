@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\JadwalLaboratorium;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class JadwalLabController extends Controller
 {
@@ -88,7 +89,7 @@ class JadwalLabController extends Controller
         $jadwal = JadwalLaboratorium::find($id);
         if (!$jadwal) {
             return redirect()->route('jadwalLab.index')->withErrors(['error' => 'Jadwal tidak ditemukan.']);
-        }       
+        }
         $validasi = $request->validate([
             'id_ruang_lab' => 'required|exists:tb_ruang_lab,id',
             'hari' => 'required|string|max:10',
@@ -104,7 +105,7 @@ class JadwalLabController extends Controller
             'waktu_selesai.after' => 'Waktu selesai harus setelah waktu mulai.',
             'id_dosen.required' => 'Dosen harus dipilih.',
             'status_ruang.required' => 'Status ruang harus dipilih.',
-        ]); 
+        ]);
         DB::beginTransaction();
         try {
             $jadwal->update($validasi);
@@ -134,5 +135,20 @@ class JadwalLabController extends Controller
             DB::rollBack();
             return redirect()->back()->withErrors(['error' => 'Terjadi kesalahan saat menghapus jadwal.']);
         }
+    }
+
+    /**
+     * fungsi untuk export data jadwal lab ke pdf
+     */
+    public function exportPdf()
+    {
+        $data = JadwalLaboratorium::with(['ruangLaboratorium', 'dosen'])
+            ->orderBy('hari', 'asc')
+            ->orderBy('waktu_mulai', 'asc')
+            ->get();
+
+        $pdf = Pdf::loadView('jadwal_lab.export_pdf', compact('data'));
+        $pdf->setPaper('A4', 'landscape');
+        return $pdf->stream();
     }
 }

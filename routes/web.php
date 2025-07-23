@@ -57,5 +57,6 @@ Route::prefix('dashboard')->middleware(['auth'])->group(function () {
         Route::get('/edit/{id}', [App\Http\Controllers\JadwalLabController::class, 'edit'])->name('jadwalLab.edit');
         Route::put('/update/{id}', [App\Http\Controllers\JadwalLabController::class, 'update'])->name('jadwalLab.update');
         Route::delete('/{id}', [App\Http\Controllers\JadwalLabController::class, 'hapus'])->name('jadwalLab.hapus');
+        Route::get('/export-pdf', [App\Http\Controllers\JadwalLabController::class, 'exportPdf'])->name('jadwalLab.exportPdf');
     });
 });

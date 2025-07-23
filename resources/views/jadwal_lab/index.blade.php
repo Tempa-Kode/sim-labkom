@@ -15,10 +15,10 @@
                     </a>
                 @endif
                 <div class="d-flex mt-3">
-                    <a href="#" class="btn btn-success me-3">
+                    <a href="" class="btn btn-success me-3">
                         <i class="fa-solid fa-file-excel me-2"></i>Excel
                     </a>
-                    <a href="#" class="btn btn-danger">
+                    <a href="{{ route('jadwalLab.exportPdf') }}" class="btn btn-danger">
                         <i class="fa-solid fa-file-pdf me-2"></i>PDF
                     </a>
                 </div>
@@ -48,7 +48,7 @@
                                 <td>{{ $jadwal->waktu_mulai ?? "-" }}</td>
                                 <td>{{ $jadwal->waktu_selesai ?? "-" }}</td>
                                 <td>{{ $jadwal->dosen->nama_dosen ?? "-" }}</td>
-                                <td> 
+                                <td>
                                     @switch($jadwal->status_ruang)
                                         @case('digunakan')
                                             <button type="button" class="btn btn-info btn-sm text-uppercase">{{ $jadwal->status_ruang }}</button>
