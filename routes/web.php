@@ -83,5 +83,7 @@ Route::prefix('dashboard')->middleware(['auth'])->group(function () {
 
     Route::prefix('/absensi')->group(function () {
         Route::get('/', [App\Http\Controllers\AbsensiController::class, 'index'])->name('absensi.index');
+        Route::get('/riwayat-absensi-saya', [App\Http\Controllers\AbsensiController::class, 'riwayatAbsensi'])->name('absensi.riwayat');
+        Route::post('/absensi', [App\Http\Controllers\AbsensiController::class, 'absensi'])->name('absensi.absensi');
     });
 });
