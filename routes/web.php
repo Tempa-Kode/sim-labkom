@@ -60,4 +60,13 @@ Route::prefix('dashboard')->middleware(['auth'])->group(function () {
         Route::get('/export-pdf', [App\Http\Controllers\JadwalLabController::class, 'exportPdf'])->name('jadwalLab.exportPdf');
         Route::get('/export-excel', [App\Http\Controllers\JadwalLabController::class, 'exportExcel'])->name('jadwalLab.exportExcel');
     });
+
+    Route::prefix('/jenis-inventaris')->group(function () {
+        Route::get('/', [App\Http\Controllers\JenisInventarisController::class, 'index'])->name('jenisInventaris.index');
+        Route::get('/tambah', [App\Http\Controllers\JenisInventarisController::class, 'tambah'])->name('jenisInventaris.tambah');
+        Route::post('/simpan', [App\Http\Controllers\JenisInventarisController::class, 'simpan'])->name('jenisInventaris.simpan');
+        Route::get('/edit/{id}', [App\Http\Controllers\JenisInventarisController::class, 'edit'])->name('jenisInventaris.edit');
+        Route::put('/update/{id}', [App\Http\Controllers\JenisInventarisController::class, 'update'])->name('jenisInventaris.update');
+        Route::delete('/{id}', [App\Http\Controllers\JenisInventarisController::class, 'hapus'])->name('jenisInventaris.hapus');
+    });
 });
