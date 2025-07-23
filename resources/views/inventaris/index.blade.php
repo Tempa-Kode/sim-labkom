@@ -15,10 +15,10 @@
                     </a>
                 @endif
                 <div class="d-flex mt-3">
-                    <a href="" class="btn btn-success me-3">
+                    <a href="{{ route('inventaris.exportExcel') }}" class="btn btn-success me-3">
                         <i class="fa-solid fa-file-excel me-2"></i>Excel
                     </a>
-                    <a href="" class="btn btn-danger">
+                    <a href="{{ route('inventaris.exportPdf') }}" class="btn btn-danger">
                         <i class="fa-solid fa-file-pdf me-2"></i>PDF
                     </a>
                 </div>

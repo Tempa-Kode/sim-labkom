@@ -77,5 +77,7 @@ Route::prefix('dashboard')->middleware(['auth'])->group(function () {
         Route::get('/edit/{id}', [App\Http\Controllers\InventarisController::class, 'edit'])->name('inventaris.edit');
         Route::put('/update/{id}', [App\Http\Controllers\InventarisController::class, 'update'])->name('inventaris.update');
         Route::delete('/{id}', [App\Http\Controllers\InventarisController::class, 'hapus'])->name('inventaris.hapus');
+        Route::get('/export-pdf', [App\Http\Controllers\InventarisController::class, 'exportPdf'])->name('inventaris.exportPdf');
+        Route::get('/export-excel', [App\Http\Controllers\InventarisController::class, 'exportExcel'])->name('inventaris.exportExcel');
     });
 });
