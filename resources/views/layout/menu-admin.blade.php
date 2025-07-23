@@ -19,8 +19,8 @@
     </a>
 </li>
 
-<li class="menu-item">
-    <a href="index.html" class="menu-link">
+<li class="menu-item {{ Route::currentRouteNamed('absensi.index') ? 'active' : '' }}">
+    <a href="{{ route('absensi.index') }}" class="menu-link">
         <i class="fa-solid fa-clipboard-user me-4"></i>
         <div data-i18n="Analytics">Data Absensi Aslab</div>
     </a>

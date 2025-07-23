@@ -80,4 +80,8 @@ Route::prefix('dashboard')->middleware(['auth'])->group(function () {
         Route::get('/export-pdf', [App\Http\Controllers\InventarisController::class, 'exportPdf'])->name('inventaris.exportPdf');
         Route::get('/export-excel', [App\Http\Controllers\InventarisController::class, 'exportExcel'])->name('inventaris.exportExcel');
     });
+
+    Route::prefix('/absensi')->group(function () {
+        Route::get('/', [App\Http\Controllers\AbsensiController::class, 'index'])->name('absensi.index');
+    });
 });
