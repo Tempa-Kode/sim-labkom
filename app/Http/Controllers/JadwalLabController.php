@@ -15,8 +15,10 @@ class JadwalLabController extends Controller
     public function index()
     {
         $data = JadwalLaboratorium::with(['ruangLaboratorium', 'dosen'])
-            ->orderBy('hari', 'asc')
+            ->join('tb_ruang_lab', 'tb_ruang_lab.id', '=', 'tb_jadwal_lab.id_ruang_lab')
+            ->orderBy('tb_ruang_lab.nama_ruang', 'asc')
             ->orderBy('waktu_mulai', 'asc')
+            ->select('tb_jadwal_lab.*')
             ->get();
 
         return view('jadwal_lab.index', compact('data'));
