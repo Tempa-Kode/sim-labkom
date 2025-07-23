@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfilController;
+use App\Models\JadwalLaboratorium;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,7 +16,13 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    $dataJadwal = JadwalLaboratorium::with(['ruangLaboratorium', 'dosen'])
+        ->join('tb_ruang_lab', 'tb_ruang_lab.id', '=', 'tb_jadwal_lab.id_ruang_lab')
+        ->orderBy('tb_ruang_lab.nama_ruang', 'asc')
+        ->orderBy('waktu_mulai', 'asc')
+        ->select('tb_jadwal_lab.*')
+        ->get();
+    return view('index', compact('dataJadwal'));
 });
 
 Route::get('/login', function () { return view('login'); })->name('login');
