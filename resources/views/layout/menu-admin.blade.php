@@ -35,8 +35,8 @@
         <div data-i18n="Analytics">Data Ruang Lab</div>
     </a>
 </li>
-<li class="menu-item">
-    <a href="index.html" class="menu-link">
+<li class="menu-item {{ Route::currentRouteNamed('inventaris.index') ? 'active' : '' }}">
+    <a href="{{ route('inventaris.index') }}" class="menu-link">
         <i class="fa-solid fa-warehouse me-4"></i>
         <div data-i18n="Analytics">Data Inventaris Lab</div>
     </a>

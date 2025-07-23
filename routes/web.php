@@ -69,4 +69,13 @@ Route::prefix('dashboard')->middleware(['auth'])->group(function () {
         Route::put('/update/{id}', [App\Http\Controllers\JenisInventarisController::class, 'update'])->name('jenisInventaris.update');
         Route::delete('/{id}', [App\Http\Controllers\JenisInventarisController::class, 'hapus'])->name('jenisInventaris.hapus');
     });
+
+    Route::prefix('/inventaris')->group(function () {
+        Route::get('/', [App\Http\Controllers\InventarisController::class, 'index'])->name('inventaris.index');
+        Route::get('/tambah', [App\Http\Controllers\InventarisController::class, 'tambah'])->name('inventaris.tambah');
+        Route::post('/simpan', [App\Http\Controllers\InventarisController::class, 'simpan'])->name('inventaris.simpan');
+        Route::get('/edit/{id}', [App\Http\Controllers\InventarisController::class, 'edit'])->name('inventaris.edit');
+        Route::put('/update/{id}', [App\Http\Controllers\InventarisController::class, 'update'])->name('inventaris.update');
+        Route::delete('/{id}', [App\Http\Controllers\InventarisController::class, 'hapus'])->name('inventaris.hapus');
+    });
 });
