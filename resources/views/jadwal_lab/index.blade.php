@@ -15,7 +15,7 @@
                     </a>
                 @endif
                 <div class="d-flex mt-3">
-                    <a href="" class="btn btn-success me-3">
+                    <a href="{{ route('jadwalLab.exportExcel') }}" class="btn btn-success me-3">
                         <i class="fa-solid fa-file-excel me-2"></i>Excel
                     </a>
                     <a href="{{ route('jadwalLab.exportPdf') }}" class="btn btn-danger">

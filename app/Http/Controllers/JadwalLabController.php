@@ -151,4 +151,46 @@ class JadwalLabController extends Controller
         $pdf->setPaper('A4', 'landscape');
         return $pdf->stream();
     }
+
+    /**
+     * fungsi untuk export data jadwal lab ke excel
+     */
+    public function exportExcel()
+    {
+        $data = JadwalLaboratorium::with(['ruangLaboratorium', 'dosen'])
+            ->orderBy('hari')
+            ->orderBy('waktu_mulai')
+            ->get();
+
+        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Set header
+        $sheet->setCellValue('A1', 'No');
+        $sheet->setCellValue('B1', 'Hari');
+        $sheet->setCellValue('C1', 'Waktu Mulai');
+        $sheet->setCellValue('D1', 'Waktu Selesai');
+        $sheet->setCellValue('E1', 'Ruang Laboratorium');
+        $sheet->setCellValue('F1', 'Dosen');
+
+        $row = 2;
+        foreach ($data as $index => $item) {
+            $sheet->setCellValue('A' . $row, $index + 1);
+            $sheet->setCellValue('B' . $row, $item->hari);
+            $sheet->setCellValue('C' . $row, $item->waktu_mulai);
+            $sheet->setCellValue('D' . $row, $item->waktu_selesai);
+            $sheet->setCellValue('E' . $row, $item->ruangLaboratorium->nama_ruang ?? '-');
+            $sheet->setCellValue('F' . $row, $item->dosen->nama_dosen ?? '-');
+            $row++;
+        }
+
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+        $filename = 'jadwal_lab_' . date('Ymd_His') . '.xlsx';
+
+        return response()->streamDownload(function () use ($writer) {
+            $writer->save('php://output');
+        }, $filename, [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        ]);
+    }
 }
