@@ -76,9 +76,9 @@
             <div class="menu-inner-shadow"></div>
             <hr>
             <div class="d-flex justify-content-center mb-3">
-                <img src="{{ Auth::user()->foto ?? asset('assets/img/avatars/1.png') }}" alt="user avatar" class="rounded-circle" width="100">
+                <img src="{{ Auth::user()->foto ?? asset('assets/img/avatars/1.png') }}" alt="user avatar" class="rounded-circle" width="70">
             </div>
-            <div class="text-center mb-3">
+            <div class="text-center">
                 <h5 class="mb-0 text-uppercase">{{ Auth::user()->nama }}</h5>
                 <p class="mb-0 text-muted text-uppercase">{{ Auth::user()->hak_akses }}</p>
             </div>
