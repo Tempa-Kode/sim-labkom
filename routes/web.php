@@ -14,16 +14,18 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::get('/', function () {
+Route::get('/', function () { return view('home.beranda'); })->name('home');
+Route::get('/tentang', function () { return view('home.tentang'); })->name('tentang');
+Route::get('/laboratorium', function () {
     $dataJadwal = JadwalLaboratorium::with(['ruangLaboratorium', 'dosen'])
         ->join('tb_ruang_lab', 'tb_ruang_lab.id', '=', 'tb_jadwal_lab.id_ruang_lab')
         ->orderBy('tb_ruang_lab.nama_ruang', 'asc')
         ->orderBy('waktu_mulai', 'asc')
         ->select('tb_jadwal_lab.*')
         ->get();
-    return view('index', compact('dataJadwal'));
-});
+    return view('home.laboratorium', compact('dataJadwal'));
+})->name('laboratorium');
+Route::get('/kotak', function () { return view('home.kontak'); })->name('kontak');
 
 Route::get('/login', function () { return view('login'); })->name('login');
 Route::post('/prosesLogin', [App\Http\Controllers\AutentikasiController::class, 'prosesLogin'])->name('prosesLogin');
