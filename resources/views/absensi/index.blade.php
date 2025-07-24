@@ -35,10 +35,7 @@
                                 <td>{{ $absensi->tanggal }}</td>
                                 <td>{{ $absensi->keterangan ?? "-" }}</td>
                                 <td>
-                                    <a href="" class="btn btn-success btn-sm me-2">
-                                        <i class="fa-solid fa-pen-to-square"></i>
-                                    </a>
-                                    <form action="" method="POST" class="d-inline">
+                                    <form action="{{ route('absensi.hapus', $absensi->id) }}" method="POST" class="d-inline">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-danger btn-sm">

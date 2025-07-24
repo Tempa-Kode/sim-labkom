@@ -62,4 +62,23 @@ class AbsensiController extends Controller
             return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan absensi: ' . $e->getMessage());
         }
     }
+
+    public function hapus($id)
+    {
+        $absensi = AbsensiAslab::find($id);
+        if (!$absensi) {
+            return redirect()->back()->with('error', 'Data absensi tidak ditemukan.');
+        }
+
+        DB::beginTransaction();
+
+        try {
+            $absensi->delete();
+            DB::commit();
+            return redirect()->back()->with('success', "Data absensi {$absensi->aslab->nama} tanggal {$absensi->tanggal} berhasil dihapus.");
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menghapus data absensi: ' . $e->getMessage());
+        }
+    }
 }
