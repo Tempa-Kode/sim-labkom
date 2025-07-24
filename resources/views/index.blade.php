@@ -86,8 +86,8 @@
 {{--Tentang--}}
 <div id="tentang" class="vh-75 d-flex align-items-center justify-content-center bg-white">
     <div class="container col-xxl-8 px-4 py-5">
-        <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
-            <div class="col-10 col-sm-8 col-lg-6">
+        <div class="row flex-lg-row-reverse align-items-center justify-content-center g-5 py-5">
+            <div class="col-10 col-sm-8 col-lg-6 d-flex justify-content-center">
                 <img src="{{ asset('assets/img/logo-fikom.png') }}" class="d-block mx-lg-auto img-fluid" alt="Bootstrap Themes" width="400" height="400" loading="lazy">
             </div>
             <div class="col-lg-6">
@@ -101,7 +101,7 @@
 {{--Tentang--}}
 
 {{--Laboratorium--}}
-<div id="laboratorium" class="vh-100 d-flex align-items-center justify-content-center bg-white">
+<div id="laboratorium" class="vh-lg-100 d-flex align-items-center justify-content-center bg-white">
     <div class="container">
         <h1 class="text-center">Ruang</h1>
         <h1 class="text-center">Laboratorium Komputer</h1>
@@ -164,7 +164,7 @@
                     </div>
                 </div>
                 <div class="col-10 col-sm-8 col-lg-6">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1008.5094214863091!2d98.62111849002339!3d3.544459610533088!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30312fce908813eb%3A0x2caf18684ec7e6c1!2sFIKOM%20UNIKA!5e1!3m2!1sen!2sid!4v1753292588523!5m2!1sen!2sid" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1008.5094214863091!2d98.62111849002339!3d3.544459610533088!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30312fce908813eb%3A0x2caf18684ec7e6c1!2sFIKOM%20UNIKA!5e1!3m2!1sen!2sid!4v1753292588523!5m2!1sen!2sid" width="350" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                 </div>
             </div>
         </div>
