@@ -29,12 +29,12 @@
 <li class="menu-header small text-uppercase">
     <span class="menu-header-text">Data Laboratorium</span>
 </li>
-<li class="menu-item {{ Route::currentRouteNamed('ruangLab.index') ? 'active' : '' }}">
+{{-- <li class="menu-item {{ Route::currentRouteNamed('ruangLab.index') ? 'active' : '' }}">
     <a href="{{ route('ruangLab.index') }}" class="menu-link">
         <i class="fa-solid fa-door-open me-4"></i>
         <div data-i18n="Analytics">Data Ruang Lab</div>
     </a>
-</li>
+</li> --}}
 <li class="menu-item {{ Route::currentRouteNamed('inventaris.index') ? 'active' : '' }}">
     <a href="{{ route('inventaris.index') }}" class="menu-link">
         <i class="fa-solid fa-warehouse me-4"></i>
