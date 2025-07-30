@@ -21,6 +21,10 @@
         <div data-i18n="Analytics">Riwayat Pengajuan</div>
     </a>
 </li>
+
+<li class="menu-header small text-uppercase">
+    <span class="menu-header-text">Lainnya</span>
+</li>
 <li class="menu-item">
     <a href="#" class="menu-link" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
         <i class="fa-solid fa-power-off me-4"></i>
