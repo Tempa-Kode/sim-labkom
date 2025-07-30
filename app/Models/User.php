@@ -37,4 +37,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Inventaris::class, 'id_pengguna');
     }
+
+    public function dosen()
+    {
+        return $this->hasOne(Dosen::class, 'id_pengguna');
+    }
 }

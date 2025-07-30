@@ -37,6 +37,12 @@ class ProfilController extends Controller
             $user->username = $validasi['username'];
             $user->save();
 
+            $dosen = $user->dosen;
+            if ($dosen) {
+                $dosen->nama_dosen = $validasi['nama'];
+                $dosen->save();
+            }
+
             DB::commit();
             return redirect()->route('profil.index')->with('success', 'Profil berhasil diperbarui.');
         } catch (\Exception $e) {
