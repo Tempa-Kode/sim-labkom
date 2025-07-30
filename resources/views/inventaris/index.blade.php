@@ -7,18 +7,18 @@
         <h4 class="fw-bold pt-3"><span class="text-muted fw-light">Home /</span> Inventaris</h4>
         @include('komponen.alert')
         <div class="card">
-            <h5 class="card-header">Daftar Inventaris Laboratorium</h5>
+            <h5 class="card-header">Daftar Inventaris Laboratorium {{ $laboratorium->nama_ruang }}</h5>
             <div class="px-3 mb-3">
                 @if (Auth::user()->hak_akses == 'aslab')
-                    <a href="{{ route('inventaris.tambah') }}" class="btn btn-primary">
+                    <a href="{{ route('inventaris.tambah', ['id' => $laboratorium->id]) }}" class="btn btn-primary">
                         <i class="fa-solid fa-square-plus me-2"></i>Tambah
                     </a>
                 @endif
                 <div class="d-flex mt-3">
-                    <a href="{{ route('inventaris.exportExcel') }}" class="btn btn-success me-3">
+                    <a href="{{ route('inventaris.exportExcel', ['id' => $laboratorium->id]) }}" class="btn btn-success me-3">
                         <i class="fa-solid fa-file-excel me-2"></i>Excel
                     </a>
-                    <a href="{{ route('inventaris.exportPdf') }}" class="btn btn-danger">
+                    <a href="{{ route('inventaris.exportPdf', ['id' => $laboratorium->id]) }}" class="btn btn-danger">
                         <i class="fa-solid fa-file-pdf me-2"></i>PDF
                     </a>
                 </div>

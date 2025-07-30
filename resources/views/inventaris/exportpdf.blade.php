@@ -58,7 +58,7 @@
     <thead>
     <tr>
         <td>
-            <img src="{{ asset('assets/img/logo-unika.png') }}" alt="logo unika" style="width: 100px; height: auto;">
+            <img src="{{ asset('assets/img/logo-fikom.png') }}" alt="logo unika" style="width: 100px; height: auto;">
         </td>
         <td>
             <div id="header">
@@ -69,13 +69,32 @@
             </div>
         </td>
         <td>
-            <img src="{{ asset('assets/img/logo-fikom.png') }}" alt="logo unika" style="width: 100px; height: auto;">
+            {{-- <img src="{{ asset('assets/img/logo-unika.png') }}" alt="logo unika" style="width: 100px; height: auto;"> --}}
         </td>
     </tr>
     </thead>
 </table>
 <hr>
-<h1 style="text-align: center">Laporan Data Inventaris Laboratorium</h1>
+<h1 style="text-align: center">Data Inventaris</h1>
+
+<table class="no-border">
+    <tr>
+        <td width="100" style="text-align: left">Kampus</td>
+        <td width="10">:</td>
+        <td style="text-align: left">Universitas Katolik Santo Thomas</td>
+    </tr>
+    <tr>
+        <td width="100" style="text-align: left">Gedung</td>
+        <td width="10">:</td>
+        <td style="text-align: left">Fakultas Ilmu Komputer</td>
+    </tr>
+    <tr>
+        <td width="100" style="text-align: left">Ruang Laboratorium</td>
+        <td width="10">:</td>
+        <td style="text-align: left">{{ $ruangLab->nama_ruang }}</td>
+    </tr>
+</table>
+
 <table>
     <thead>
     <tr>
@@ -103,11 +122,18 @@
         </tr>
     @empty
         <tr>
-            <td colspan="6">Tidak ada data jadwal.</td>
+            <td colspan="8">Tidak ada data inventaris.</td>
         </tr>
     @endforelse
     </tbody>
 </table>
+<div style="margin-top: 60px; display: flex; justify-content: flex-end;">
+    <div style="text-align: right;">
+        <p>Diketahui Oleh,</p>
+        <p style="margin-bottom: 70px;">Kepala Lab</p>
+        <p style="margin-top: 0; font-weight: bold; text-decoration: underline;">Sardo Sipayung, S.Kom., M.Kom</p>
+    </div>
+</div>
 <div class="footer-watermark">
     SIM-LABKOM | Dicetak pada tanggal {{ date("d-m-Y") }}
 </div>

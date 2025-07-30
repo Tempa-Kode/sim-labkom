@@ -15,10 +15,18 @@ class InventarisController extends Controller
     /*
     * fungsi untuk menampilkan halaman inventaris
     */
-    public function index()
+    public function index(Request $request)
     {
-        $data = Inventaris::all();
-        return view('inventaris.index', compact('data'));
+        // Jika ada parameter id ruang, filter inventaris berdasarkan ruang
+        if ($request->has('id')) {
+            $data = Inventaris::where('id_ruang', $request->id)->get();
+            $laboratorium = RuangLaboratorium::select('id','nama_ruang')->where('id', $request->id)->first();
+        } else {
+            // Ambil semua data inventaris jika tidak ada filter
+            $data = Inventaris::all();
+        }
+
+        return view('inventaris.index', compact('data', 'laboratorium'));
     }
 
     /*
@@ -66,7 +74,7 @@ class InventarisController extends Controller
         try {
             Inventaris::create($validasi);
             DB::commit();
-            return redirect()->route('inventaris.index')->with('success', 'Inventaris berhasil ditambahkan');
+            return redirect()->route('inventaris.index', ['id' => $validasi['id_ruang']])->with('success', 'Inventaris berhasil ditambahkan');
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->withErrors(['error' => 'Gagal menambahkan inventaris: ' . $e->getMessage()])->withInput();
@@ -128,7 +136,7 @@ class InventarisController extends Controller
         try {
             $inventaris->update($validasi);
             DB::commit();
-            return redirect()->route('inventaris.index')->with('success', 'Inventaris berhasil diperbarui');
+            return redirect()->route('inventaris.index', ['id' => $validasi['id_ruang']])->with('success', 'Inventaris berhasil diperbarui');
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->withErrors(['error' => 'Gagal memperbarui inventaris: ' . $e->getMessage()])->withInput();
@@ -148,7 +156,7 @@ class InventarisController extends Controller
         try {
             $inventaris->delete();
             DB::commit();
-            return redirect()->route('inventaris.index')->with('success', 'Inventaris berhasil dihapus');
+            return redirect()->route('inventaris.index', ['id' => $inventaris->id_ruang])->with('success', 'Inventaris berhasil dihapus');
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->withErrors(['error' => 'Gagal menghapus inventaris: ' . $e->getMessage()]);
@@ -158,18 +166,19 @@ class InventarisController extends Controller
     /*
      * fungsi untuk mencetak report pdf inventaris
      * */
-    public function exportPdf()
+    public function exportPdf(Request $request)
     {
-        $data = Inventaris::all();
-        $pdf = Pdf::loadView('inventaris.exportpdf', compact('data'));
+        $data = Inventaris::where('id_ruang', $request->id)->get();
+        $ruangLab = RuangLaboratorium::findOrFail($request->id);
+        $pdf = Pdf::loadView('inventaris.exportpdf', compact('data', 'ruangLab'));
         $pdf->setPaper('A4', 'landscape');
         return $pdf->stream();
     }
 
-    public function exportExcel()
+    public function exportExcel(Request $request)
     {
-        $data = Inventaris::all();
-
+        $data = Inventaris::where('id_ruang', $request->id)->with('ruangLaboratorium')->get();
+        $ruangLab = RuangLaboratorium::findOrFail($request->id);
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
 
@@ -197,7 +206,7 @@ class InventarisController extends Controller
         }
 
         $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
-        $filename = 'inventaris_lab_' . date('Ymd_His') . '.xlsx';
+        $filename = "inventaris_lab_{$ruangLab->nama_ruang}_" . date('Ymd_His') . ".xlsx";
 
         return response()->streamDownload(function () use ($writer) {
             $writer->save('php://output');

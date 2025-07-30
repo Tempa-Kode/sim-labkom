@@ -1,3 +1,7 @@
+@php
+    $dataLab = \App\Models\RuangLaboratorium::all();
+@endphp
+
 <li class="menu-item {{ Route::currentRouteNamed('dashboard') ? 'active' : '' }}">
     <a href="{{ route('dashboard') }}" class="menu-link">
         <i class="fa-solid fa-gauge-high me-4"></i>
@@ -35,10 +39,20 @@
     </a>
 </li> --}}
 <li class="menu-item {{ Route::currentRouteNamed('inventaris.index') ? 'active' : '' }}">
-    <a href="{{ route('inventaris.index') }}" class="menu-link">
+    <a href="" class="menu-link menu-toggle">
         <i class="fa-solid fa-warehouse me-4"></i>
         <div data-i18n="Analytics">Daftar Barang Lab</div>
     </a>
+    <ul class="menu-sub">
+        @foreach ($dataLab as $lab)
+            <li class="menu-item {{ Route::currentRouteNamed('inventaris.index') && request('id') == $lab->id ? 'active' : '' }}">
+                <a href="{{ route('inventaris.index', ['id' => $lab->id]) }}" class="menu-link">
+                    <div class="text-capitalize">{{ $lab->nama_ruang }}</div>
+                </a>
+            </li>
+        @endforeach
+        </ul>
+    </li>
 </li>
 
 <li class="menu-item {{ Route::currentRouteNamed('jadwalLab.index') ? 'active' : '' }}">

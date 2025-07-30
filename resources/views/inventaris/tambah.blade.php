@@ -67,7 +67,7 @@
                                     <select id="id_ruang" name="id_ruang" class="form-select @error('id_ruang') is-invalid @enderror">
                                         <option value="" hidden>Pilih Ruang</option>
                                         @foreach($ruangLab as $item)
-                                            <option value="{{ $item->id }}" @if(old('id_ruang') == $item->id) selected @endif>{{ $item->nama_ruang }}</option>
+                                            <option value="{{ $item->id }}" @if(old('id_ruang') == $item->id || $item->id == request()->id) selected @endif>{{ $item->nama_ruang }}</option>
                                         @endforeach
                                     </select>
                                 </div>
