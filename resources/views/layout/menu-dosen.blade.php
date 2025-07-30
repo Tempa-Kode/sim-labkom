@@ -13,11 +13,17 @@
 </li>
 
 <li class="menu-header small text-uppercase">
-    <span class="menu-header-text">Pengajuan</span>
+    <span class="menu-header-text">Laboratorium</span>
 </li>
-<li class="menu-item">
-    <a href="" class="menu-link">
-        <i class="fa-solid fa-warehouse me-4"></i>
+<li class="menu-item {{ Route::currentRouteNamed('pengajuan.tambah') ? 'active' : '' }}">
+    <a href="{{ route('pengajuan.tambah') }}" class="menu-link">
+        <i class="fa-solid fa-paper-plane me-4"></i>
+        <div data-i18n="Analytics">Pengajuan</div>
+    </a>
+</li>
+<li class="menu-item {{ Route::currentRouteNamed('pengajuan.index') ? 'active' : '' }}">
+    <a href="{{ route('pengajuan.index') }}" class="menu-link">
+        <i class="fa-solid fa-clock-rotate-left me-4"></i>
         <div data-i18n="Analytics">Riwayat Pengajuan</div>
     </a>
 </li>

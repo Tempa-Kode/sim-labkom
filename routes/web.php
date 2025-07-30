@@ -96,4 +96,12 @@ Route::prefix('dashboard')->middleware(['auth'])->group(function () {
         Route::post('/absensi', [App\Http\Controllers\AbsensiController::class, 'absensi'])->name('absensi.absensi');
         Route::delete('/hapus/{id}', [App\Http\Controllers\AbsensiController::class, 'hapus'])->name('absensi.hapus');
     });
+
+    Route::prefix('/pengajuan')->group(function () {
+        Route::get('/', [App\Http\Controllers\PengajuanController::class, 'index'])->name('pengajuan.index');
+        Route::get('/tambah', [App\Http\Controllers\PengajuanController::class, 'tambah'])->name('pengajuan.tambah');
+        Route::post('/simpan', [App\Http\Controllers\PengajuanController::class, 'simpan'])->name('pengajuan.simpan');
+        Route::put('/setujui/{id}', [App\Http\Controllers\PengajuanController::class, 'setujui'])->name('pengajuan.setujui');
+        Route::put('/tolak/{id}', [App\Http\Controllers\PengajuanController::class, 'tolak'])->name('pengajuan.tolak');
+    });
 });

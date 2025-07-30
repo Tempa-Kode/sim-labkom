@@ -47,6 +47,12 @@
         <div data-i18n="Analytics">Kelola Jadwal Lab</div>
     </a>
 </li>
+<li class="menu-item {{ Route::currentRouteNamed('pengajuan.index') ? 'active' : '' }}">
+    <a href="{{ route('pengajuan.index') }}" class="menu-link">
+        <i class="fa-solid fa-paper-plane me-4"></i>
+        <div data-i18n="Analytics">Pengajuan</div>
+    </a>
+</li>
 
 <li class="menu-header small text-uppercase">
     <span class="menu-header-text">Lainnya</span>
