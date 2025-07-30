@@ -91,6 +91,9 @@
                     @case('aslab')
                         @include('layout.menu-aslab')
                         @break
+                    @case('dosen')
+                        @include('layout.menu-dosen')
+                        @break
                 @endswitch
             </ul>
         </aside>
