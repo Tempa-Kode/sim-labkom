@@ -47,6 +47,7 @@
                             <select id="hak_akses" class="form-select" name="hak_akses">
                                 <option value="" hidden>Pilih Hak Akses</option>
                                 <option value="admin" @if (old('hak_akses', $user->hak_akses) == 'admin') selected @endif>Admin</option>
+                                <option value="dosen" @if (old('hak_akses', $user->hak_akses) == 'dosen') selected @endif>Dosen</option>
                                 <option value="aslab" @if (old('hak_akses', $user->hak_akses) == 'aslab') selected @endif>Aslab</option>
                             </select>
                             @error('hak_akses')

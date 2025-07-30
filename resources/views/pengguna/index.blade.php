@@ -30,7 +30,7 @@
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $pengguna->nama }}</td>
                                 <td>{{ $pengguna->username }}</td>
-                                <td>{{ $pengguna->hak_akses }}</td>
+                                <td class="text-capitalize">{{ $pengguna->hak_akses }}</td>
                                 <td>
                                     <a href="{{ route('pengguna.edit', $pengguna->id) }}" class="btn btn-success btn-sm me-2">
                                         <i class="fa-solid fa-pen-to-square"></i>
@@ -100,6 +100,7 @@
                             <select id="hak_akses" class="form-select" name="hak_akses">
                                 <option value="" hidden>Pilih Hak Akses</option>
                                 <option value="admin">Admin</option>
+                                <option value="dosen">Dosen</option>
                                 <option value="aslab">Aslab</option>
                             </select>
                             @error('hak_akses')
