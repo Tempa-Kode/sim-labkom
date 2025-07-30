@@ -32,7 +32,7 @@
                             <th>Hari</th>
                             <th>Waktu Mulai</th>
                             <th>Waktu Selesai</th>
-                            <th>Waktu Dosen</th>
+                            <th>Nama Dosen</th>
                             <th>Status</th>
                             @if (Auth::user()->hak_akses == 'aslab')
                                 <th>Aksi</th>
