@@ -31,4 +31,22 @@ class JadwalLaboratorium extends Model
     {
         return $this->belongsTo(RuangLaboratorium::class, 'id_ruang_lab');
     }
+
+    public function scopeFilterHari($query, $hari)
+    {
+        if ($hari) {
+            $query->where('hari', $hari);
+        }
+        return $query;
+    }
+
+    public function scopeFilterWaktu($query, $waktu)
+    {
+        if ($waktu) {
+            // Filter waktu di antara waktu_mulai dan waktu_selesai
+            $query->where('waktu_mulai', '<=', $waktu)
+                ->where('waktu_selesai', '>=', $waktu);
+        }
+        return $query;
+    }
 }

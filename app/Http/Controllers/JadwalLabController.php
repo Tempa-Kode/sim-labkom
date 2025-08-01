@@ -195,4 +195,25 @@ class JadwalLabController extends Controller
             'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         ]);
     }
+
+    /**
+    * fungsi untuk menampilkan jadwal lab di halaman laboratorium
+    */
+    public function jadwalLaboratorium(Request $request){
+        $hari = $request->input('hari') ?? \Carbon\Carbon::now()->locale('id')->translatedFormat('l');
+        $waktu = $request->input('waktu'); // format: 'H:i'
+
+        $tanggalHariIni = \Carbon\Carbon::now()->locale('id')->translatedFormat('l, d F Y');
+
+
+        $dataJadwal = JadwalLaboratorium::with(['ruangLaboratorium', 'dosen'])
+        ->join('tb_ruang_lab', 'tb_ruang_lab.id', '=', 'tb_jadwal_lab.id_ruang_lab')
+        // ->orderBy('tb_ruang_lab.nama_ruang', 'asc')
+        ->orderBy('waktu_mulai', 'asc')
+        ->select('tb_jadwal_lab.*')
+        ->filterHari($hari)
+        ->filterWaktu($waktu)
+        ->get();
+        return view('home.laboratorium', compact('dataJadwal', 'tanggalHariIni', 'hari', 'waktu'));
+    }
 }

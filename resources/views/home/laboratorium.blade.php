@@ -8,6 +8,22 @@
         <div class="container">
             <h1 class="text-center">Ruang</h1>
             <h1 class="text-center">Laboratorium Komputer</h1>
+            <h3 class="text-center">
+                {{ $tanggalHariIni }}
+            </h3>
+            <div class="d-flex justify-content-center mt-4">
+                <form action="" class="d-flex align-items-center gap-3 flex-nowrap flex-wrap">
+                    <select name="hari" id="hari" class="form-select" style="min-width: 150px;" onchange="this.form.submit()">
+                        <option value="" hidden>Pilih Hari</option>
+                        <option value="senin" {{ $hari == 'senin' ? 'selected' : '' }}>Senin</option>
+                        <option value="selasa" {{ $hari == 'selasa' ? 'selected' : '' }}>Selasa</option>
+                        <option value="rabu" {{ $hari == 'rabu' ? 'selected' : '' }}>Rabu</option>
+                        <option value="kamis" {{ $hari == 'kamis' ? 'selected' : '' }}>Kamis</option>
+                        <option value="jumat" {{ $hari == 'jumat' ? 'selected' : '' }}>Jumat</option>
+                    </select>
+                    <input type="time" name="waktu" id="waktu" class="form-control" style="min-width: 120px;" onchange="this.form.submit()">
+                </form>
+            </div>
             <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4 mt-3">
                 @forelse($dataJadwal as $jadwal)
                     <div class="col">
