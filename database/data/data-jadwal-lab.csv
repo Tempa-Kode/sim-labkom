@@ -1,0 +1,85 @@
+no,hari,id_dosen,dosen,id_ruanglab,lab,mulai,selesai
+1,senin,2,"Desinta Purba, S.T., M.Kom.",1,LAB A,8:00:00,10:30:00
+2,senin,1,"Wasit Ginting, S.Kom., M.Kom",2,LAB B,8:00:00,10:30:00
+3,senin,7,"Parasian D.P. Silitonga, S.Kom, M.Cs",3,LAB C,8:00:00,10:30:00
+4,senin,8,"Andy Paul Harianja, ST, M.Kom",4,LAB D,8:00:00,10:30:00
+5,senin,9,"Lotar Mateus Sinaga, M.Kom",5,LAB E,8:00:00,10:30:00
+6,senin,10,"Emerson P. Malau, S.Si, M.Kom",8,LAB G,8:00:00,10:30:00
+7,senin,23,"Zekson Arizona Matondang, S.Kom, M.Kom",1,LAB A,10:40:00,12:20:00
+8,senin,11,"Sardo Sipayung, S.Kom., M.Kom",2,LAB B,10:40:00,12:20:00
+9,senin,7,"Parasian D.P. Silitonga, S.Kom, M.Cs",3,LAB C,10:40:00,12:20:00
+10,senin,12,"Masdiana Sagala, S.Kom, M.Kom",4,LAB D,10:40:00,12:20:00
+11,senin,13,"Romanus Damanik, S.Kom, M.Kom",5,LAB E,10:40:00,12:20:00
+12,senin,9,"Lotar Mateus Sinaga, M.Kom",8,LAB G,10:40:00,12:20:00
+13,senin,9,"Lotar Mateus Sinaga, M.Kom",1,LAB A,14:00:00,16:30:00
+14,senin,11,"Sardo Sipayung, S.Kom., M.Kom",2,LAB B,14:00:00,16:30:00
+15,senin,8,"Andy Paul Harianja, ST, M.Kom",3,LAB C,14:00:00,16:30:00
+16,senin,14,"Doni El Rezen Purba, S.Kom.,M.Kom",4,LAB D,14:00:00,16:30:00
+17,senin,15,"Paska Marto, S.Kom., M.Kom",5,LAB E,14:00:00,16:30:00
+18,senin,10,"Emerson P. Malau, S.Si, M.Kom",8,LAB G,14:00:00,16:30:00
+19,selasa,16,"Drs. Lamhot Sitorus, M.Kom",1,LAB A,8:00:00,10:30:00
+20,selasa,17,"Dr. Tonni Limbong, S.Kom, M.Kom",2,LAB B,8:00:00,10:30:00
+21,selasa,14,"Doni El Rezen Purba, S.Kom.,M.Kom",3,LAB C,8:00:00,10:30:00
+22,selasa,9,"Lotar Mateus Sinaga, M.Kom",4,LAB D,8:00:00,10:30:00
+23,selasa,3,"Sorang Pakpahan, S.Kom., M.Kom.",5,LAB E,8:00:00,10:30:00
+24,selasa,15,"Paska Marto, S.Kom., M.Kom",8,LAB G,8:00:00,10:30:00
+25,selasa,16,"Drs. Lamhot Sitorus, M.Kom",1,LAB A,10:40:00,12:20:00
+26,selasa,15,"Paska Marto, S.Kom., M.Kom",2,LAB B,10:40:00,12:20:00
+27,selasa,18,"Pandi Barita Nauli Simangunsong, S. Kom, M.Kom",3,LAB C,10:40:00,12:20:00
+28,selasa,9,"Lotar Mateus Sinaga, M.Kom",4,LAB D,10:40:00,12:20:00
+29,selasa,19,"Novri Siagian, S.Kom., M.Kom",5,LAB E,10:40:00,12:20:00
+30,selasa,12,"Masdiana Sagala, S.Kom, M.Kom",8,LAB G,10:40:00,12:20:00
+31,selasa,3,"Sorang Pakpahan, S.Kom., M.Kom.",1,LAB A,14:00:00,16:30:00
+32,selasa,20,"Prof. Dr. Zakarias Situmorang, MT",2,LAB B,14:00:00,16:30:00
+33,selasa,8,"Andy Paul Harianja, ST, M.Kom",3,LAB C,14:00:00,16:30:00
+34,selasa,1,"Wasit Ginting, S.Kom., M.Kom",4,LAB D,14:00:00,16:30:00
+35,selasa,7,"Parasian D.P. Silitonga, S.Kom, M.Cs",5,LAB E,14:00:00,16:30:00
+36,selasa,21,"Alex Rikki, S.Kom.,M.Kom",8,LAB G,14:00:00,16:30:00
+37,rabu,8,"Andy Paul Harianja, ST, M.Kom",1,LAB A,8:00:00,10:30:00
+38,rabu,14,"Doni El Rezen Purba, S.Kom.,M.Kom",2,LAB B,8:00:00,10:30:00
+39,rabu,12,"Masdiana Sagala, S.Kom, M.Kom",3,LAB C,8:00:00,10:30:00
+40,rabu,18,"Pandi Barita Nauli Simangunsong, S. Kom, M.Kom",4,LAB D,8:00:00,10:30:00
+41,rabu,10,"Emerson P. Malau, S.Si, M.Kom",5,LAB E,8:00:00,10:30:00
+42,rabu,11,"Sardo Sipayung, S.Kom., M.Kom",8,LAB G,8:00:00,10:30:00
+43,rabu,16,"Drs. Lamhot Sitorus, M.Kom",1,LAB A,10:40:00,12:20:00
+44,rabu,21,"Alex Rikki, S.Kom.,M.Kom",2,LAB B,10:40:00,12:20:00
+45,rabu,8,"Andy Paul Harianja, ST, M.Kom",3,LAB C,10:40:00,12:20:00
+46,rabu,3,"Sorang Pakpahan, S.Kom., M.Kom.",4,LAB D,10:40:00,12:20:00
+47,rabu,1,"Wasit Ginting, S.Kom., M.Kom",5,LAB E,10:40:00,12:20:00
+48,rabu,12,"Masdiana Sagala, S.Kom, M.Kom",8,LAB G,10:40:00,12:20:00
+49,rabu,3,"Sorang Pakpahan, S.Kom., M.Kom.",1,LAB A,14:00:00,16:30:00
+50,rabu,17,"Dr. Tonni Limbong, S.Kom, M.Kom",2,LAB B,14:00:00,16:30:00
+51,rabu,22,"Anirma Kandida Ginting, S.Kom., M.Kom",3,LAB C,14:00:00,16:30:00
+52,rabu,18,"Pandi Barita Nauli Simangunsong, S. Kom, M.Kom",4,LAB D,14:00:00,16:30:00
+53,rabu,14,"Doni El Rezen Purba, S.Kom.,M.Kom",5,LAB E,14:00:00,16:30:00
+54,rabu,12,"Masdiana Sagala, S.Kom, M.Kom",8,LAB G,14:00:00,16:30:00
+55,kamis,16,"Drs. Lamhot Sitorus, M.Kom",1,LAB A,8:00:00,10:30:00
+56,kamis,8,"Andy Paul Harianja, ST, M.Kom",2,LAB B,8:00:00,10:30:00
+57,kamis,11,"Sardo Sipayung, S.Kom., M.Kom",3,LAB C,8:00:00,10:30:00
+58,kamis,23,"Zekson Arizona Matondang, S.Kom, M.Kom",4,LAB D,8:00:00,10:30:00
+59,kamis,7,"Parasian D.P. Silitonga, S.Kom, M.Cs",5,LAB E,8:00:00,10:30:00
+60,kamis,12,"Masdiana Sagala, S.Kom, M.Kom",8,LAB G,8:00:00,10:30:00
+61,kamis,23,"Zekson Arizona Matondang, S.Kom, M.Kom",1,LAB A,10:40:00,12:20:00
+62,kamis,17,"Dr. Tonni Limbong, S.Kom, M.Kom",2,LAB B,10:40:00,12:20:00
+63,kamis,3,"Sorang Pakpahan, S.Kom., M.Kom.",3,LAB C,10:40:00,12:20:00
+64,kamis,1,"Wasit Ginting, S.Kom., M.Kom",4,LAB D,10:40:00,12:20:00
+65,kamis,22,"Anirma Kandida Ginting, S.Kom., M.Kom",5,LAB E,10:40:00,12:20:00
+66,kamis,11,"Sardo Sipayung, S.Kom., M.Kom",8,LAB G,10:40:00,12:20:00
+67,kamis,1,"Wasit Ginting, S.Kom., M.Kom",1,LAB A,14:00:00,16:30:00
+68,kamis,17,"Dr. Tonni Limbong, S.Kom, M.Kom",2,LAB B,14:00:00,16:30:00
+69,kamis,8,"Andy Paul Harianja, ST, M.Kom",3,LAB C,14:00:00,16:30:00
+70,kamis,3,"Sorang Pakpahan, S.Kom., M.Kom.",4,LAB D,14:00:00,16:30:00
+71,kamis,14,"Doni El Rezen Purba, S.Kom.,M.Kom",5,LAB E,14:00:00,16:30:00
+72,kamis,7,"Parasian D.P. Silitonga, S.Kom, M.Cs",8,LAB G,14:00:00,16:30:00
+73,jumat,2,"Desinta Purba, S.T., M.Kom.",1,LAB A,11:40:00,13:10:00
+74,jumat,11,"Sardo Sipayung, S.Kom., M.Kom",2,LAB B,11:40:00,13:10:00
+75,jumat,21,"Alex Rikki, S.Kom.,M.Kom",3,LAB C,11:40:00,13:10:00
+76,jumat,1,"Wasit Ginting, S.Kom., M.Kom",4,LAB D,11:40:00,13:10:00
+77,jumat,23,"Zekson Arizona Matondang, S.Kom, M.Kom",5,LAB E,11:40:00,13:10:00
+78,jumat,9,"Lotar Mateus Sinaga, M.Kom",8,LAB G,11:40:00,13:10:00
+79,jumat,17,"Dr. Tonni Limbong, S.Kom, M.Kom",1,LAB A,14:00:00,16:30:00
+80,jumat,23,"Zekson Arizona Matondang, S.Kom, M.Kom",2,LAB B,14:00:00,16:30:00
+81,jumat,2,"Desinta Purba, S.T., M.Kom.",3,LAB C,14:00:00,16:30:00
+82,jumat,3,"Sorang Pakpahan, S.Kom., M.Kom.",4,LAB D,14:00:00,16:30:00
+83,jumat,14,"Doni El Rezen Purba, S.Kom.,M.Kom",5,LAB E,14:00:00,16:30:00
+84,jumat,7,"Parasian D.P. Silitonga, S.Kom, M.Cs",8,LAB G,14:00:00,16:30:00
