@@ -25,8 +25,10 @@
                         </div>
                     </div>
                 @empty
+                <div class="d-flex justify-content-center flex-column align-items-center w-100">
                     <h5 class="text-center text-muted">Tidak ada jadwal laboratorium yang tersedia</h5>
                     <p class="text-center text-muted">Silakan cek kembali nanti.</p>
+                </div>
                 @endforelse
             </div>
         </div>
