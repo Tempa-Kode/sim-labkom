@@ -79,7 +79,7 @@
             <div class="menu-inner-shadow"></div>
             <hr>
             <div class="d-flex justify-content-center mb-3">
-                <img src="{{ Auth::user()->foto ?? asset('assets/img/avatars/1.png') }}" alt="user avatar" class="rounded-circle" width="70">
+                <img src="{{ Auth::user()->foto ?? asset('foto-pengguna/noset.jpg') }}" alt="user avatar" class="rounded-circle" width="70">
             </div>
             <div class="text-center">
                 <h5 class="mb-0 text-uppercase">{{ Auth::user()->nama }}</h5>
@@ -122,7 +122,7 @@
                 <li class="nav-item navbar-dropdown dropdown-user dropdown">
                   <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
                     <div class="avatar avatar-online">
-                      <img src="{{ Auth::user()->foto ?? asset('assets/img/avatars/1.png') }}" alt class="w-px-40 h-auto rounded-circle" />
+                      <img src="{{ Auth::user()->foto ?? asset('foto-pengguna/noset.jpg') }}" alt class="w-px-40 h-auto rounded-circle" />
                     </div>
                   </a>
                   <ul class="dropdown-menu dropdown-menu-end">

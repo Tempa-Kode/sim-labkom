@@ -13,7 +13,7 @@
                     <div class="card-body">
                         <div class="d-flex align-items-start align-items-sm-center gap-4">
                             <img
-                                src="{{ Auth::user()->foto ?? asset('assets/img/avatars/1.png') }}"
+                                src="{{ Auth::user()->foto ?? asset('foto-pengguna/noset.jpg') }}"
                                 alt="user-avatar"
                                 class="d-block rounded"
                                 height="100"

@@ -206,7 +206,7 @@ class JadwalLabController extends Controller
         $tanggalHariIni = \Carbon\Carbon::now()->locale('id')->translatedFormat('l, d F Y');
 
 
-        $dataJadwal = JadwalLaboratorium::with(['ruangLaboratorium', 'dosen'])
+        $dataJadwal = JadwalLaboratorium::with(['ruangLaboratorium', 'dosen', 'dosen.user'])
         ->join('tb_ruang_lab', 'tb_ruang_lab.id', '=', 'tb_jadwal_lab.id_ruang_lab')
         // ->orderBy('tb_ruang_lab.nama_ruang', 'asc')
         ->orderBy('waktu_mulai', 'asc')

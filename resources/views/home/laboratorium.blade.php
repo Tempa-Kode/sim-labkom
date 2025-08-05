@@ -34,6 +34,11 @@
                                 <p class="card-text">Mulai {{ $jadwal->waktu_mulai }}</p>
                                 <p class="card-text">Selai {{ $jadwal->waktu_selesai }}</p>
                             </div>
+                           @if(isset($jadwal->dosen) && isset($jadwal->dosen->user) && !empty($jadwal->dosen->user->foto))
+                                <img src="{{ asset($jadwal->dosen->user->foto) }}" alt="foto dosen" class="img-thumbnail w-25 d-block mx-auto">
+                            @else
+                                <img src="{{ asset('foto-pengguna/noset.jpg') }}" alt="foto dosen" class="img-thumbnail w-25 d-block mx-auto">
+                            @endif
                             <p class="text-center mt-1 text-muted">Dosen : {{ $jadwal->dosen->nama_dosen }}</p>
                             <button class="btn btn-{{ $jadwal->status_ruang == 'digunakan' ? 'success' : 'warning' }} btn-sm text-uppercase">
                                 {{ $jadwal->status_ruang }}

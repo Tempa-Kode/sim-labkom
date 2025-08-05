@@ -21,4 +21,9 @@ class Dosen extends Model
     {
         return $this->hasMany(JadwalLaboratorium::class, 'id_dosen');
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id_pengguna');
+    }
 }
