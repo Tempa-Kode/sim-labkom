@@ -51,8 +51,7 @@
                 </a>
             </li>
         @endforeach
-        </ul>
-    </li>
+    </ul>
 </li>
 
 <li class="menu-item {{ Route::currentRouteNamed('jadwalLab.index') ? 'active' : '' }}">
