@@ -8,10 +8,21 @@
         @include('komponen.alert')
         <div class="card">
             <h5 class="card-header">Daftar Absensi Aslab</h5>
-            <div class="w-25 ps-4">
+            <div class="w-100 ps-4">
                 <form id="filter-tanggal" action="" method="get">
-                    <label for="tanggal">Filter Tanggal</label>
-                    <input type="date" name="tanggal" id="tanggal" class="form-control">
+                    <div class="d-flex align-items-end gap-2 mb-2">
+                        <div>
+                            <label for="tanggal_mulai" class="form-label">Tanggal Mulai</label>
+                            <input type="date" name="tanggal_mulai" id="tanggal_mulai" class="form-control" value="{{ request('tanggal_mulai') }}">
+                        </div>
+                        <div>
+                            <label for="tanggal_akhir" class="form-label">Tanggal Akhir</label>
+                            <input type="date" name="tanggal_akhir" id="tanggal_akhir" class="form-control" value="{{ request('tanggal_akhir') }}">
+                        </div>
+                        <div>
+                            <button type="submit" class="btn btn-primary mt-4">Filter</button>
+                        </div>
+                    </div>
                 </form>
             </div>
             <div class="table-responsive text-nowrap px-3">

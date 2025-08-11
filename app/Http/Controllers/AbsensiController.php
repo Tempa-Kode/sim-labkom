@@ -11,13 +11,21 @@ class AbsensiController extends Controller
 {
     public function index(Request $request)
     {
-        $data = [];
-        if($request->query('tanggal')){
-            $tanggal = $request->query('tanggal');
-            $data = AbsensiAslab::where('tanggal', $tanggal)->get();
-        } else {
-            $data = AbsensiAslab::all();
+        $query = AbsensiAslab::query();
+
+        if ($request->filled('tanggal_mulai') && $request->filled('tanggal_akhir')) {
+            $query->whereBetween('tanggal', [
+                $request->tanggal_mulai,
+                $request->tanggal_akhir
+            ]);
         }
+
+        elseif ($request->query('tanggal')) {
+            $tanggal = $request->query('tanggal');
+            $query->where('tanggal', $tanggal);
+        }
+
+        $data = $query->get();
 
         return view('absensi.index', compact('data'));
     }
