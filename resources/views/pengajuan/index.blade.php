@@ -24,11 +24,10 @@
                             <th>Waktu Mulai</th>
                             <th>Waktu Selesai</th>
                             <th>Nama Dosen</th>
-                            @if(Auth::user()->hak_akses == 'dosen')
+{{--                            @if(Auth::user()->hak_akses == 'dosen')--}}
                                 <th>Keterangan</th>
-                            @else
-                                <th>Aksi</th>
-                            @endif
+{{--                            @endif--}}
+                            <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody class="table-border-bottom-0">
@@ -42,23 +41,35 @@
                                 <td>{{ $pengajuan->jam_mulai ? \Carbon\Carbon::parse($pengajuan->jam_mulai)->format('H:i') : "-" }}</td>
                                 <td>{{ $pengajuan->jam_selesai ? \Carbon\Carbon::parse($pengajuan->jam_selesai)->format('H:i') : "-" }}</td>
                                 <td>{{ $pengajuan->dosen->nama_dosen ?? "-" }}</td>
+                                <td>
+                                    @switch($pengajuan->status)
+                                        @case('disetujui')
+                                            <span class="badge rounded-pill bg-label-success">{{  $pengajuan->status }}</span>
+                                            @break
+                                        @case('ditolak')
+                                            <span class="badge rounded-pill bg-label-danger">{{  $pengajuan->status }}</span>
+                                            @break
+                                        @case('dibatalkan')
+                                            <span class="badge rounded-pill bg-label-warning show-reason" style="cursor: pointer;" data-id="{{ $pengajuan->id }}">{{ $pengajuan->status }}</span>
+                                        @break
+                                        @default
+                                            <span class="badge rounded-pill bg-label-info">{{  $pengajuan->status }}</span>
+                                    @endswitch
+                                </td>
                                 @if (Auth::user()->hak_akses == 'dosen')
                                     <td>
-                                        @switch($pengajuan->status)
-                                            @case('disetujui')
-                                                <span class="badge rounded-pill bg-label-success">{{  $pengajuan->status }}</span>
-                                                @break
-                                            @case('ditolak')
-                                                <span class="badge rounded-pill bg-label-danger">{{  $pengajuan->status }}</span>
-                                                @break
-                                            @default
-                                                <span class="badge rounded-pill bg-label-warning">{{  $pengajuan->status }}</span>
-                                        @endswitch
+                                        <button class="btn btn-danger batal" data-id="{{ $pengajuan->id }}">
+                                            <i class="bx bx-x"></i> Batal
+                                        </button>
                                     </td>
                                 @else
                                     <td>
-                                        <button type="button" class="btn btn-sm btn-success setuju" data-id="{{ $pengajuan->id }}">Setuju</button>
-                                        <button type="button" class="btn btn-sm btn-danger tolak" data-id="{{ $pengajuan->id }}">Tolak</button>
+                                        @if($pengajuan->status == 'menunggu')
+                                            <button type="button" class="btn btn-sm btn-success setuju" data-id="{{ $pengajuan->id }}">Setuju</button>
+                                            <button type="button" class="btn btn-sm btn-danger tolak" data-id="{{ $pengajuan->id }}">Tolak</button>
+                                        @else
+                                            -
+                                        @endif
                                     </td>
                                 @endif
                             </tr>
@@ -166,6 +177,95 @@
                             );
                         }
                     });
+                }
+            });
+        });
+
+        $('.batal').on('click', function() {
+            var id = $(this).data('id');
+            Swal.fire({
+                title: 'Ajukan Pembatalan',
+                text: "Silahkan berikan alasan pembatalan:",
+                icon: 'warning',
+                input: 'textarea',
+                inputPlaceholder: 'Masukkan alasan pembatalan...',
+                inputAttributes: {
+                    'required': true
+                },
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ajukan Pembatalan',
+                cancelButtonText: 'Batal',
+                inputValidator: (value) => {
+                    if (!value) {
+                        return 'Alasan pembatalan harus diisi!'
+                    }
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{{ url('/dashboard/pengajuan/batalkan') }}/" + id,
+                        type: 'POST',
+                        data: {
+                            _method: 'PUT',
+                            _token: '{{ csrf_token() }}',
+                            keterangan: result.value
+                        },
+                        success: function(response) {
+                            console.log(response);
+                            if (response.success) {
+                                Swal.fire(
+                                    'Dibatalkan!',
+                                    response.message,
+                                    'success'
+                                ).then(() => {
+                                    location.reload();
+                                });
+                            } else {
+                                Swal.fire(
+                                    'Gagal!',
+                                    response.message,
+                                    'error'
+                                );
+                            }
+                        },
+                        error: function(xhr) {
+                            console.log(xhr);
+                            Swal.fire(
+                                'Gagal!',
+                                'Terjadi kesalahan saat membatalkan pengajuan.',
+                                'error'
+                            );
+                        }
+                    });
+                }
+            });
+        });
+
+        $(document).on('click', '.show-reason', function() {
+            var id = $(this).data('id');
+
+            $.ajax({
+                url: "{{ route('pengajuan.keterangan', ':id') }}".replace(':id', id),
+                type: 'GET',
+                success: function(response) {
+                    if (response.success) {
+                        Swal.fire({
+                            title: 'Alasan ' + response.status.charAt(0).toUpperCase() + response.status.slice(1),
+                            text: response.keterangan,
+                            icon: 'info',
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'Tutup'
+                        });
+                    }
+                },
+                error: function() {
+                    Swal.fire(
+                        'Error',
+                        'Gagal mengambil keterangan',
+                        'error'
+                    );
                 }
             });
         });

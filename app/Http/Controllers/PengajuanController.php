@@ -18,8 +18,6 @@ class PengajuanController extends Controller
         $data = Pengajuan::orderBy('id', 'desc')->get();
         if (Auth::user()->hak_akses == 'dosen') {
             $data = $data->where('id_dosen', Auth::user()->dosen->id);
-        } else {
-            $data = $data->whereNotIn('status', ['ditolak', 'disetujui']);
         }
         return view('pengajuan.index', compact('data'));
     }
@@ -112,5 +110,40 @@ class PengajuanController extends Controller
                 'message' => 'Gagal menolak pengajuan: ' . $e->getMessage()
             ]);
         }
+    }
+
+    public function batalkan(Request $request, $id)
+    {
+        $pengajuan = Pengajuan::findOrFail($id);
+        DB::beginTransaction();
+        try {
+            $pengajuan->status = 'dibatalkan';
+            $pengajuan->keterangan = $request->keterangan;
+            $pengajuan->save();
+
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => 'Pengajuan berhasil dibatalkan.',
+                'data' => $pengajuan
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal membatalkan pengajuan: ' . $e->getMessage()
+            ]);
+        }
+    }
+
+    public function keterangan($id)
+    {
+        $pengajuan = Pengajuan::findOrFail($id);
+
+        return response()->json([
+            'success' => true,
+            'keterangan' => $pengajuan->keterangan ?? 'Tidak ada keterangan',
+            'status' => $pengajuan->status
+        ]);
     }
 }

@@ -95,5 +95,7 @@ Route::prefix('dashboard')->middleware(['auth'])->group(function () {
         Route::post('/simpan', [App\Http\Controllers\PengajuanController::class, 'simpan'])->name('pengajuan.simpan');
         Route::put('/setujui/{id}', [App\Http\Controllers\PengajuanController::class, 'setujui'])->name('pengajuan.setujui');
         Route::put('/tolak/{id}', [App\Http\Controllers\PengajuanController::class, 'tolak'])->name('pengajuan.tolak');
+        Route::put('/batalkan/{id}', [App\Http\Controllers\PengajuanController::class, 'batalkan'])->name('pengajuan.batalkan');
+        Route::get('/keterangan/{id}', [App\Http\Controllers\PengajuanController::class, 'keterangan'])->name('pengajuan.keterangan');
     });
 });

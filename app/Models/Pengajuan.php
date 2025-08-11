@@ -18,7 +18,8 @@ class Pengajuan extends Model
         'tanggal_pemakaian',
         'jam_mulai',
         'jam_selesai',
-        'status'
+        'status',
+        'keterangan',
     ];
 
     public $timestamps = false;
