@@ -13,6 +13,27 @@ use Illuminate\Support\Facades\DB;
 class InventarisController extends Controller
 {
     /*
+    * fungsi untuk menampilkan daftar lab
+    */
+    public function home()
+    {
+        $lab = RuangLaboratorium::all();
+        return view('inventaris.home', compact('lab'));
+    }
+
+    /*
+    * fungsi untuk export PDF semua inventaris lab
+    */
+    public function exportAllPdf()
+    {
+        $ruangLab = RuangLaboratorium::with('inventaris','inventaris.jenisInventaris')->get();
+        // dd($ruangLab);
+        $pdf = Pdf::loadView('inventaris.export-all-pdf', compact('ruangLab'));
+        $pdf->setPaper('A4', 'landscape');
+        return $pdf->stream('Semua_Inventaris_Lab_' . date('Y-m-d_H-i-s') . '.pdf');
+    }
+
+    /*
     * fungsi untuk menampilkan halaman inventaris
     */
     public function index(Request $request)

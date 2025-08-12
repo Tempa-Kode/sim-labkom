@@ -39,7 +39,7 @@
         <div data-i18n="Analytics">Data Ruang Lab</div>
     </a>
 </li> --}}
-<li class="menu-item {{ Route::currentRouteNamed('inventaris.index') ? 'active' : '' }}">
+{{-- <li class="menu-item {{ Route::currentRouteNamed('inventaris.index') ? 'active' : '' }}">
     <a href="{{ route('inventaris.index') }}" class="menu-link menu-toggle">
         <i class="fa-solid fa-warehouse me-4"></i>
         <div data-i18n="Analytics">Data Inventaris Lab</div>
@@ -53,8 +53,14 @@
             </li>
         @endforeach
     </ul>
-</li>
+</li> --}}
 
+<li class="menu-item {{ Route::currentRouteNamed('inventaris.home') ? 'active' : '' }}">
+    <a href="{{ route('inventaris.home') }}" class="menu-link">
+        <i class="fa-solid fa-warehouse me-4"></i>
+        <div data-i18n="Analytics">Data Inventaris Lab</div>
+    </a>
+</li>
 <li class="menu-item {{ Route::currentRouteNamed('jadwalLab.index') ? 'active' : '' }}">
     <a href="{{ route('jadwalLab.index') }}" class="menu-link">
         <i class="fa-solid fa-calendar-days me-4"></i>

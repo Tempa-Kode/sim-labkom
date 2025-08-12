@@ -73,6 +73,8 @@ Route::prefix('dashboard')->middleware(['auth'])->group(function () {
     });
 
     Route::prefix('/inventaris')->group(function () {
+        Route::get('/home', [App\Http\Controllers\InventarisController::class, 'home'])->name('inventaris.home');
+        Route::get('/export-all-pdf', [App\Http\Controllers\InventarisController::class, 'exportAllPdf'])->name('inventaris.exportAllPdf');
         Route::get('/', [App\Http\Controllers\InventarisController::class, 'index'])->name('inventaris.index');
         Route::get('/tambah', [App\Http\Controllers\InventarisController::class, 'tambah'])->name('inventaris.tambah');
         Route::post('/simpan', [App\Http\Controllers\InventarisController::class, 'simpan'])->name('inventaris.simpan');
