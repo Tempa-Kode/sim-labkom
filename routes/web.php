@@ -40,6 +40,7 @@ Route::prefix('dashboard')->middleware(['auth'])->group(function () {
         Route::post('/tambah', [App\Http\Controllers\PenggunaController::class, 'tambah'])->name('pengguna.tambah');
         Route::get('/edit/{user:id}', [App\Http\Controllers\PenggunaController::class, 'edit'])->name('pengguna.edit');
         Route::put('/update/{user:id}', [App\Http\Controllers\PenggunaController::class, 'update'])->name('pengguna.update');
+        Route::get('/export-pdf-dosen', [App\Http\Controllers\PenggunaController::class, 'exportPdfDosen'])->name('pengguna.exportPdfDosen');
     });
 
     Route::prefix('/ruang-lab')->group(function () {

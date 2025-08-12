@@ -7,6 +7,9 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Barryvdh\DomPDF\Facade\Pdf;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class PenggunaController extends Controller
 {
@@ -143,5 +146,15 @@ class PenggunaController extends Controller
             DB::rollBack();
             return redirect()->route('pengguna.index')->with('error', 'Akun gagal diperbaharui: ' . $e->getMessage());
         }
+    }
+
+    public function exportPdfDosen()
+    {
+        $akunDosen = User::where('hak_akses', 'dosen')->with('dosen')->get();
+
+        $pdf = Pdf::loadView('pengguna.pdf', compact('akunDosen'));
+        $pdf->setPaper('A4', 'portrait');
+
+        return $pdf->stream('Laporan_Akun_Dosen_' . date('Y-m-d_H-i-s') . '.pdf');
     }
 }
