@@ -22,6 +22,17 @@
                         <i class="fa-solid fa-file-pdf me-2"></i>PDF
                     </a>
                 </div>
+                <div class="row mt-3">
+                    <div class="col-md-3">
+                        <select class="form-select" name="hari" id="hari">
+                            <option value="senin">Senin</option>
+                            <option value="selasa">Selasa</option>
+                            <option value="rabu">Rabu</option>
+                            <option value="kamis">Kamis</option>
+                            <option value="jumat">Jumat</option>
+                        </select>
+                    </div>
+                </div>
             </div>
             <div class="table-responsive text-nowrap px-3">
                 <table id="datatables" class="table">
@@ -79,3 +90,37 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+    <script type="text/javascript">
+        var table = $('#datatables').DataTable({
+            "paging": true,
+            "lengthChange": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false,
+            "responsive": true,
+        });
+
+        // Filter berdasarkan hari
+        $('#hari').on('change', function() {
+            var selectedDay = this.value;
+
+            if (selectedDay === '') {
+                // Jika "Semua Hari" dipilih, tampilkan semua data
+                table.column(2).search('').draw();
+            } else {
+                // Filter berdasarkan hari yang dipilih (kolom ke-3, index 2)
+                table.column(2).search('^' + selectedDay + '$', true, false).draw();
+            }
+
+            // Update nomor urut setelah filter
+            table.on('draw', function() {
+                table.column(0, { search: 'applied', order: 'applied' }).nodes().each(function(cell, i) {
+                    cell.innerHTML = i + 1;
+                });
+            });
+        });
+    </script>
+@endpush
