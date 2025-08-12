@@ -6,6 +6,7 @@ use App\Models\AbsensiAslab;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class AbsensiController extends Controller
 {
@@ -88,5 +89,26 @@ class AbsensiController extends Controller
             DB::rollBack();
             return redirect()->back()->with('error', 'Terjadi kesalahan saat menghapus data absensi: ' . $e->getMessage());
         }
+    }
+
+    public function exportPdfAbsensi(Request $request)
+    {
+        $query = AbsensiAslab::with('aslab');
+
+        if ($request->filled('tanggal')) {
+            $query->where('tanggal', $request->tanggal);
+            $periode = date('d/m/Y', strtotime($request->tanggal));
+        } else {
+            $periode = 'Semua Data';
+        }
+
+        $dataAbsensi = $query->orderBy('tanggal', 'desc')->get();
+
+        $groupedData = $dataAbsensi->groupBy('tanggal');
+
+        $pdf = Pdf::loadView('absensi.pdf-absensi', compact('groupedData', 'periode'));
+        $pdf->setPaper('A4', 'portrait');
+
+        return $pdf->stream('Laporan_Absensi_Aslab_' . date('Y-m-d_H-i-s') . '.pdf');
     }
 }

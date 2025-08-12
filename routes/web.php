@@ -88,6 +88,7 @@ Route::prefix('dashboard')->middleware(['auth'])->group(function () {
         Route::get('/riwayat-absensi-saya', [App\Http\Controllers\AbsensiController::class, 'riwayatAbsensi'])->name('absensi.riwayat');
         Route::post('/absensi', [App\Http\Controllers\AbsensiController::class, 'absensi'])->name('absensi.absensi');
         Route::delete('/hapus/{id}', [App\Http\Controllers\AbsensiController::class, 'hapus'])->name('absensi.hapus');
+        Route::get('/export-pdf', [App\Http\Controllers\AbsensiController::class, 'exportPdfAbsensi'])->name('absensi.exportPdf');
     });
 
     Route::prefix('/pengajuan')->group(function () {
