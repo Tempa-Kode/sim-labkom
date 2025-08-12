@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\RuangLaboratorium;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Barryvdh\DomPDF\Facade\Pdf;
+use App\Exports\PengajuanExport;
 
 class PengajuanController extends Controller
 {
@@ -145,5 +147,60 @@ class PengajuanController extends Controller
             'keterangan' => $pengajuan->keterangan ?? 'Tidak ada keterangan',
             'status' => $pengajuan->status
         ]);
+    }
+
+    /*
+    | fungsi untuk export data pengajuan ke PDF
+    */
+    public function exportPdf(Request $request)
+    {
+        $query = Pengajuan::with(['ruang', 'dosen'])->orderBy('tanggal_pengajuan', 'desc');
+
+        // Filter berdasarkan hak akses
+        if (Auth::user()->hak_akses == 'dosen') {
+            $query->where('id_dosen', Auth::user()->dosen->id);
+        }
+
+        $data = $query->get();
+
+        $pdf = Pdf::loadView('pengajuan.export-pdf', [
+            'data' => $data,
+            'tanggal_mulai' => $request->tanggal_mulai,
+            'tanggal_selesai' => $request->tanggal_selesai,
+            'status' => $request->status
+        ])->setPaper('a4', 'landscape');
+
+        return $pdf->stream('Laporan_Pengajuan_' . date('Y-m-d_H-i-s') . '.pdf');
+    }
+
+    /*
+    | fungsi untuk export data pengajuan ke Excel
+    */
+    public function exportExcel(Request $request)
+    {
+        $query = Pengajuan::with(['ruang', 'dosen'])->orderBy('tanggal_pengajuan', 'desc');
+
+        // Filter berdasarkan hak akses
+        if (Auth::user()->hak_akses == 'dosen') {
+            $query->where('id_dosen', Auth::user()->dosen->id);
+        }
+
+        $data = $query->get();
+
+        $filename = 'Laporan_Pengajuan_' . date('Y-m-d_H-i-s') . '.xls';
+
+        $html = view('pengajuan.export-excel', [
+            'data' => $data,
+            'tanggal_mulai' => $request->tanggal_mulai,
+            'tanggal_selesai' => $request->tanggal_selesai,
+            'status' => $request->status
+        ])->render();
+
+        return response($html)
+            ->header('Content-Type', 'application/vnd.ms-excel; charset=UTF-8')
+            ->header('Content-Disposition', 'attachment; filename="' . $filename . '"')
+            ->header('Pragma', 'no-cache')
+            ->header('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
+            ->header('Expires', '0');
     }
 }

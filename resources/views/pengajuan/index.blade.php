@@ -11,6 +11,14 @@
         <div class="card">
             <h5 class="card-header {{ Auth::user()->hak_akses == 'aslab' ? 'text-center' : '' }}">
                 {{ Auth::user()->hak_akses == 'aslab' ? 'Pengajuan Penggunaan Ruang Laboratorium' : 'Riwayat Pengajuan' }}
+                <div class="d-flex mt-3">
+                    <a href="{{ route('pengajuan.exportExcel') }}" class="btn btn-success me-3">
+                        <i class="fa-solid fa-file-excel me-2"></i>Excel
+                    </a>
+                    <a href="{{ route('pengajuan.exportPdf') }}" class="btn btn-danger">
+                        <i class="fa-solid fa-file-pdf me-2"></i>PDF
+                    </a>
+                </div>
             </h5>
             <div class="table-responsive text-nowrap px-3">
                 <table id="datatables" class="table">

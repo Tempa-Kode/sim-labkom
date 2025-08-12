@@ -101,5 +101,7 @@ Route::prefix('dashboard')->middleware(['auth'])->group(function () {
         Route::put('/tolak/{id}', [App\Http\Controllers\PengajuanController::class, 'tolak'])->name('pengajuan.tolak');
         Route::put('/batalkan/{id}', [App\Http\Controllers\PengajuanController::class, 'batalkan'])->name('pengajuan.batalkan');
         Route::get('/keterangan/{id}', [App\Http\Controllers\PengajuanController::class, 'keterangan'])->name('pengajuan.keterangan');
+        Route::get('/export-pdf', [App\Http\Controllers\PengajuanController::class, 'exportPdf'])->name('pengajuan.exportPdf');
+        Route::get('/export-excel', [App\Http\Controllers\PengajuanController::class, 'exportExcel'])->name('pengajuan.exportExcel');
     });
 });
