@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Exports\PengajuanExport;
+use App\Models\JadwalLaboratorium;
 
 class PengajuanController extends Controller
 {
@@ -33,6 +34,46 @@ class PengajuanController extends Controller
         return view('pengajuan.tambah', compact('ruangLab'));
     }
 
+    /**
+     * API: daftar ruang yang tersedia (tidak ada jadwal bentrok) pada hari & rentang waktu.
+     * Query params: hari (senin..jumat), jam_mulai (HH:MM), jam_selesai (HH:MM)
+     */
+    public function ruangTersedia(Request $request)
+    {
+        $request->validate([
+            'hari' => 'required|string',
+            'jam_mulai' => ['required','regex:/^(?:[01]\\d|2[0-3]):[0-5]\\d$/'],
+            'jam_selesai' => ['required','regex:/^(?:[01]\\d|2[0-3]):[0-5]\\d$/'],
+        ]);
+
+        $hari = $request->input('hari');
+        $mulai = $request->input('jam_mulai');
+        $selesai = $request->input('jam_selesai');
+
+        // Ambil semua ruang yang tidak memiliki jadwal bentrok pada hari & rentang waktu tersebut
+    $ruangTersedia = RuangLaboratorium::whereDoesntHave('jadwalLaboratorium', function($q) use ($hari, $mulai, $selesai) {
+        $q->where('hari', $hari)
+          // hanya hitung bentrok yang statusnya sedang digunakan
+          ->where('status_ruang', 'digunakan')
+          // overlap: existing.start < new.end AND existing.end > new.start
+          ->where(function($qq) use ($mulai, $selesai) {
+              $qq->where('waktu_mulai', '<', $selesai)
+             ->where('waktu_selesai', '>', $mulai);
+          });
+        })
+            ->orderBy('nama_ruang', 'asc')
+            ->get(['id','nama_ruang']);
+
+        // Optional: jika ingin hanya status ruang 'kosong' pada momen sekarang (bukan rentang),
+        // biasanya status_ruang ada di entitas jadwal, jadi untuk penyaringan ketat pada rentang,
+        // patokan utama adalah "tidak ada bentrok". Kita kembalikan list ruang siap dipakai.
+
+        return response()->json([
+            'success' => true,
+            'data' => $ruangTersedia,
+        ]);
+    }
+
     /*
     | fungsi untuk menyimpan data pengajuan penggunaan laboratorium
     */
@@ -55,7 +96,19 @@ class PengajuanController extends Controller
 
         DB::beginTransaction();
         try {
-            Pengajuan::create($validasi);
+            // Tandai pengajuan sebagai menunggu jika kolom status ada
+            if (!isset($validasi['status'])) {
+                $validasi['status'] = 'menunggu';
+            }
+            $pengajuan = Pengajuan::create($validasi);
+
+            // Buat notifikasi untuk ASLAB agar mengkonfirmasi pengajuan ini
+            \App\Models\Notifikasi::create([
+                'pengajuan_id' => $pengajuan->id,
+                'judul' => 'Pengajuan Baru',
+                'pesan' => 'Pengajuan penggunaan lab membutuhkan konfirmasi ASLAB untuk penjadwalan.',
+                'status' => 'baru',
+            ]);
             DB::commit();
             return redirect()->route('pengajuan.index')->with('success', 'Pengajuan berhasil disimpan.');
         } catch (\Exception $e) {

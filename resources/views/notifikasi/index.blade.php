@@ -19,7 +19,7 @@
                             <th>#</th>
                             <th>Judul</th>
                             <th>Pesan</th>
-                            <th>Jadwal</th>
+                            <th>Jadwal/Pengajuan</th>
                             <th>Status</th>
                             <th>Aksi</th>
                         </tr>
@@ -32,8 +32,13 @@
                                 <td>{{ $n->pesan }}</td>
                                 <td>
                                     @if ($n->jadwal)
-                                        {{ $n->jadwal->ruangLaboratorium->nama_ruang ?? "-" }}<br>
+                                        {{ $n->jadwal->ruangLaboratorium->nama_ruang ?? '-' }}<br>
                                         {{ $n->jadwal->hari }} {{ $n->jadwal->waktu_mulai }}-{{ $n->jadwal->waktu_selesai }}
+                                    @elseif ($n->pengajuan)
+                                        [Pengajuan]
+                                        {{ $n->pengajuan->ruang->nama_ruang ?? '-' }}<br>
+                                        {{ \Carbon\Carbon::parse($n->pengajuan->tanggal_pemakaian)->locale('id')->translatedFormat('l, d F Y') }}<br>
+                                        {{ $n->pengajuan->jam_mulai }}-{{ $n->pengajuan->jam_selesai }}
                                     @else
                                         -
                                     @endif
@@ -42,6 +47,12 @@
                                         class="badge bg-{{ $n->status === "baru" ? "warning" : "success" }}">{{ $n->status }}</span>
                                 </td>
                                 <td>
+                                    @if ($n->pengajuan && $n->status === 'baru')
+                                        <form action="{{ route('notifikasi.konfirmasiPengajuan', $n) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            <button class="btn btn-primary btn-sm">Konfirmasi Pengajuan</button>
+                                        </form>
+                                    @endif
                                     <form action="{{ route("notifikasi.dibaca", $n) }}" method="POST" class="d-inline">
                                         @csrf
                                         @method("PUT")
