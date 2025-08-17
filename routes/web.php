@@ -109,8 +109,8 @@ Route::prefix('dashboard')->middleware(['auth'])->group(function () {
     Route::prefix('/pengajuan')->group(function () {
         Route::get('/', [App\Http\Controllers\PengajuanController::class, 'index'])->name('pengajuan.index');
         Route::get('/tambah', [App\Http\Controllers\PengajuanController::class, 'tambah'])->name('pengajuan.tambah');
-    // API untuk mendapatkan ruang tersedia (kosong) pada hari dan rentang waktu tertentu
-    Route::get('/ruang-tersedia', [App\Http\Controllers\PengajuanController::class, 'ruangTersedia'])->name('pengajuan.ruangTersedia');
+        // API untuk mendapatkan ruang tersedia (kosong) pada hari dan rentang waktu tertentu
+        Route::get('/ruang-tersedia', [App\Http\Controllers\PengajuanController::class, 'ruangTersedia'])->name('pengajuan.ruangTersedia');
         Route::post('/simpan', [App\Http\Controllers\PengajuanController::class, 'simpan'])->name('pengajuan.simpan');
         Route::put('/setujui/{id}', [App\Http\Controllers\PengajuanController::class, 'setujui'])->name('pengajuan.setujui');
         Route::put('/tolak/{id}', [App\Http\Controllers\PengajuanController::class, 'tolak'])->name('pengajuan.tolak');
