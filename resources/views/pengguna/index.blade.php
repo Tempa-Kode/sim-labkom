@@ -91,6 +91,7 @@
                                 <select id="hak_akses" class="form-select" name="hak_akses">
                                     <option value="" hidden>Pilih Hak Akses</option>
                                     <option value="admin">Admin</option>
+                                    <option value="kepala_lab">Kepala Lab</option>
                                     <option value="dosen">Dosen</option>
                                     <option value="aslab">Aslab</option>
                                 </select>

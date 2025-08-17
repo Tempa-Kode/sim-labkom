@@ -30,7 +30,7 @@ class PenggunaController extends Controller
         $validasi = $request->validate([
             'nama' => 'required|string|max:255',
             'username' => 'required|string|unique:tb_pengguna,username',
-            'hak_akses' => 'required|in:admin,aslab,dosen',
+            'hak_akses' => 'required|in:admin,kepala_lab,aslab,dosen',
             'password' => 'required|string|min:8|confirmed',
         ], [
             'nama.required' => 'Nama pengguna harus diisi',
