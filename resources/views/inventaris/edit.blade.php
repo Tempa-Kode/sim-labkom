@@ -29,16 +29,6 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-sm-2 col-form-label" for="kondisi">Kondisi</label>
-                                <div class="col-sm-10">
-                                    <select id="kondisi" name="kondisi" class="form-select @error('kondisi') is-invalid @enderror">
-                                        <option value="" hidden>Pilih Kondisi</option>
-                                        <option value="Baik" @if(old('kondisi', $inventaris->kondisi) == 'Baik') selected @endif>Baik</option>
-                                        <option value="rusak" @if(old('kondisi', $inventaris->kondisi) == 'rusak') selected @endif>Rusak</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
                                 <label class="col-sm-2 col-form-label" for="keterangan">Keterangan</label>
                                 <div class="col-sm-10">
                                     <textarea class="form-control" name="keterangan" id="keterangan" cols="30" rows="3" value="{{ old('keterangan', $inventaris->keterangan) }}"></textarea>
@@ -48,17 +38,6 @@
                                 <label class="col-sm-2 col-form-label" for="jumlah">Jumlah</label>
                                 <div class="col-sm-10">
                                     <input class="form-control @error('jumlah') is-invalid @enderror" type="number" id="jumlah" name="jumlah" value="{{ old('jumlah', $inventaris->jumlah) }}"/>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <label class="col-sm-2 col-form-label" for="id_jenis">Jenis</label>
-                                <div class="col-sm-10">
-                                    <select id="id_jenis" name="id_jenis" class="form-select @error('id_jenis') is-invalid @enderror">
-                                        <option value="" hidden>Pilih Jenis</option>
-                                        @foreach($jenis as $item)
-                                            <option value="{{ $item->id }}" @if(old('id_jenis', $inventaris->id_jenis) == $item->id) selected @endif>{{ $item->nama_jenis }}</option>
-                                        @endforeach
-                                    </select>
                                 </div>
                             </div>
                             <div class="row mb-3">

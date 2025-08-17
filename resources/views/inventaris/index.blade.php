@@ -30,9 +30,7 @@
                             <th>No</th>
                             <th>Nama Barang</th>
                             <th>Kode Barang</th>
-                            <th>Kondisi</th>
                             <th>Ket</th>
-                            <th>Jenis</th>
                             <th>Jumlah</th>
                             <th>Ruangan</th>
                             <th>Nama Petugas</th>
@@ -47,9 +45,7 @@
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $jadwal->nama_barang }}</td>
                                 <td>{{ $jadwal->kode_barang ?? "-" }}</td>
-                                <td>{{ $jadwal->kondisi }}</td>
                                 <td>{{ $jadwal->keterangan ?? "-" }}</td>
-                                <td>{{ $jadwal->jenisInventaris->nama_jenis }}</td>
                                 <td>{{ $jadwal->jumlah }}</td>
                                 <td>{{ $jadwal->ruangLaboratorium->nama_ruang }}</td>
                                 <td>{{ $jadwal->aslab->nama }}</td>
