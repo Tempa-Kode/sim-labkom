@@ -9,9 +9,11 @@
         <div class="card">
             <h5 class="card-header">Akun</h5>
             <div class="px-3 mb-3 d-flex justify-content-between">
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tambahPenggunaModal">
-                    <i class="fa-solid fa-square-plus me-2"></i>Tambah
-                </button>
+                @if (Auth::user()->hak_akses == "admin")
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tambahPenggunaModal">
+                        <i class="fa-solid fa-square-plus me-2"></i>Tambah
+                    </button>
+                @endif
                 <a class="btn btn-secondary" href="{{ route("pengguna.exportPdfDosen") }}">
                     <i class="fa-solid fa-file-pdf me-2"></i>Pdf Akun Dosen
                 </a>
@@ -24,7 +26,11 @@
                             <th>Nama</th>
                             <th>Username</th>
                             <th>Hak Akses</th>
-                            <th>Aksi</th>
+                            
+                            {{-- Aksi Hanya Terdapat Pada Admin --}}
+                            @if (Auth::user()->hak_akses == "admin")
+                                <th>Aksi</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody class="table-border-bottom-0">
@@ -34,6 +40,9 @@
                                 <td>{{ $pengguna->nama }}</td>
                                 <td>{{ $pengguna->username }}</td>
                                 <td class="text-capitalize">{{ $pengguna->hak_akses }}</td>
+
+                                {{-- Aksi Hanya Terdapat Pada Admin --}}
+                                @if (Auth::user()->hak_akses == "admin")
                                 <td>
                                     <a href="{{ route("pengguna.edit", $pengguna->id) }}"
                                         class="btn btn-success btn-sm me-2">
@@ -48,6 +57,7 @@
                                         </button>
                                     </form>
                                 </td>
+                                @endif
                             </tr>
                         @endforeach
                     </tbody>

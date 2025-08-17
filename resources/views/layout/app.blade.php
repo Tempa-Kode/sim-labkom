@@ -97,6 +97,9 @@
                     @case('dosen')
                         @include('layout.menu-dosen')
                         @break
+                    @case('kepala_lab')
+                        @include('layout.menu-kepala_lab')
+                        @break
                 @endswitch
             </ul>
         </aside>

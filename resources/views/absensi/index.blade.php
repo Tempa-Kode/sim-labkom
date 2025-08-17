@@ -39,7 +39,11 @@
                             <th>Hari</th>
                             <th>Tanggal</th>
                             <th>Keterangan</th>
-                            <th>Aksi</th>
+
+                            {{-- Aksi Hanya Terdapat Pada Admin --}}
+                            @if (Auth::user()->hak_akses == "admin")
+                                <th>Aksi</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody class="table-border-bottom-0">
@@ -50,6 +54,9 @@
                                 <td>{{ $absensi->hari }}</td>
                                 <td>{{ $absensi->tanggal }}</td>
                                 <td>{{ $absensi->keterangan ?? "-" }}</td>
+
+                                {{-- Aksi Hanya Terdapat Pada Admin --}}
+                                @if (Auth::user()->hak_akses == "admin")
                                 <td>
                                     <form action="{{ route("absensi.hapus", $absensi->id) }}" method="POST"
                                         class="d-inline">
@@ -60,6 +67,7 @@
                                         </button>
                                     </form>
                                 </td>
+                                @endif
                             </tr>
                         @endforeach
                     </tbody>
