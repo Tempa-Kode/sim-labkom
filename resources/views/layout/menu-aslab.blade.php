@@ -1,23 +1,24 @@
 @php
     $dataLab = \App\Models\RuangLaboratorium::all();
+    $notifBaru = \App\Models\Notifikasi::where("status", "baru")->count();
 @endphp
 
-<li class="menu-item {{ Route::currentRouteNamed('dashboard') ? 'active' : '' }}">
-    <a href="{{ route('dashboard') }}" class="menu-link">
+<li class="menu-item {{ Route::currentRouteNamed("dashboard") ? "active" : "" }}">
+    <a href="{{ route("dashboard") }}" class="menu-link">
         <i class="fa-solid fa-gauge-high me-4"></i>
         <div data-i18n="Analytics">Dashboard</div>
     </a>
 </li>
 
-<li class="menu-item {{ Route::currentRouteNamed('profil.index') ? 'active' : '' }}">
-    <a href="{{ route('profil.index') }}" class="menu-link">
+<li class="menu-item {{ Route::currentRouteNamed("profil.index") ? "active" : "" }}">
+    <a href="{{ route("profil.index") }}" class="menu-link">
         <i class="fa-solid fa-address-card me-4"></i>
         <div data-i18n="Analytics">Profil</div>
     </a>
 </li>
 
-<li class="menu-item {{ Route::currentRouteNamed('absensi.riwayat') ? 'active' : '' }}">
-    <a href="{{ route('absensi.riwayat') }}" class="menu-link">
+<li class="menu-item {{ Route::currentRouteNamed("absensi.riwayat") ? "active" : "" }}">
+    <a href="{{ route("absensi.riwayat") }}" class="menu-link">
         <i class="fa-solid fa-clipboard-user me-4"></i>
         <div data-i18n="Analytics">Absensi</div>
     </a>
@@ -38,15 +39,16 @@
         <div data-i18n="Analytics">Jenis Barang Lab</div>
     </a>
 </li> --}}
-<li class="menu-item {{ Route::currentRouteNamed('inventaris.index') ? 'active' : '' }}">
+<li class="menu-item {{ Route::currentRouteNamed("inventaris.index") ? "active" : "" }}">
     <a href="" class="menu-link menu-toggle">
         <i class="fa-solid fa-warehouse me-4"></i>
         <div data-i18n="Analytics">Daftar Barang Lab</div>
     </a>
     <ul class="menu-sub">
         @foreach ($dataLab as $lab)
-            <li class="menu-item {{ Route::currentRouteNamed('inventaris.index') && request('id') == $lab->id ? 'active' : '' }}">
-                <a href="{{ route('inventaris.index', ['id' => $lab->id]) }}" class="menu-link">
+            <li
+                class="menu-item {{ Route::currentRouteNamed("inventaris.index") && request("id") == $lab->id ? "active" : "" }}">
+                <a href="{{ route("inventaris.index", ["id" => $lab->id]) }}" class="menu-link">
                     <div class="text-capitalize">{{ $lab->nama_ruang }}</div>
                 </a>
             </li>
@@ -54,16 +56,26 @@
     </ul>
 </li>
 
-<li class="menu-item {{ Route::currentRouteNamed('jadwalLab.index') ? 'active' : '' }}">
-    <a href="{{ route('jadwalLab.index') }}" class="menu-link">
+<li class="menu-item {{ Route::currentRouteNamed("jadwalLab.index") ? "active" : "" }}">
+    <a href="{{ route("jadwalLab.index") }}" class="menu-link">
         <i class="fa-solid fa-calendar-days me-4"></i>
         <div data-i18n="Analytics">Kelola Jadwal Lab</div>
     </a>
 </li>
-<li class="menu-item {{ Route::currentRouteNamed('pengajuan.index') ? 'active' : '' }}">
-    <a href="{{ route('pengajuan.index') }}" class="menu-link">
+<li class="menu-item {{ Route::currentRouteNamed("pengajuan.index") ? "active" : "" }}">
+    <a href="{{ route("pengajuan.index") }}" class="menu-link">
         <i class="fa-solid fa-paper-plane me-4"></i>
         <div data-i18n="Analytics">Pengajuan</div>
+    </a>
+</li>
+
+<li class="menu-item {{ Route::currentRouteNamed("notifikasi.index") ? "active" : "" }}">
+    <a href="{{ route("notifikasi.index") }}" class="menu-link d-flex align-items-center">
+        <i class="fa-solid fa-bell me-4"></i>
+        <div data-i18n="Analytics">Notifikasi</div>
+        @if ($notifBaru > 0)
+            <span class="badge bg-danger ms-2">{{ $notifBaru }}</span>
+        @endif
     </a>
 </li>
 
@@ -71,12 +83,13 @@
     <span class="menu-header-text">Lainnya</span>
 </li>
 <li class="menu-item">
-    <a href="#" class="menu-link" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+    <a href="#" class="menu-link"
+        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
         <i class="fa-solid fa-power-off me-4"></i>
         <div data-i18n="Documentation">Logout</div>
     </a>
 </li>
 
-<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+<form id="logout-form" action="{{ route("logout") }}" method="POST" style="display: none;">
     @csrf
 </form>

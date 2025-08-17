@@ -61,6 +61,18 @@ Route::prefix('dashboard')->middleware(['auth'])->group(function () {
         Route::delete('/{id}', [App\Http\Controllers\JadwalLabController::class, 'hapus'])->name('jadwalLab.hapus');
         Route::get('/export-pdf', [App\Http\Controllers\JadwalLabController::class, 'exportPdf'])->name('jadwalLab.exportPdf');
         Route::get('/export-excel', [App\Http\Controllers\JadwalLabController::class, 'exportExcel'])->name('jadwalLab.exportExcel');
+        // realtime actions
+        Route::post('/{id}/status', [App\Http\Controllers\JadwalLabController::class, 'ubahStatus'])->name('jadwalLab.ubahStatus');
+    Route::post('/{id}/notify-selesai', [App\Http\Controllers\JadwalLabController::class, 'notifySelesai'])->name('jadwalLab.notifySelesai');
+    });
+
+    // Notifikasi
+    Route::prefix('/notifikasi')->group(function () {
+        Route::get('/', [App\Http\Controllers\NotifikasiController::class, 'index'])->name('notifikasi.index');
+        Route::get('/tambah', [App\Http\Controllers\NotifikasiController::class, 'create'])->name('notifikasi.tambah');
+        Route::post('/simpan', [App\Http\Controllers\NotifikasiController::class, 'store'])->name('notifikasi.simpan');
+        Route::put('/{notifikasi}/dibaca', [App\Http\Controllers\NotifikasiController::class, 'markRead'])->name('notifikasi.dibaca');
+        Route::delete('/{notifikasi}', [App\Http\Controllers\NotifikasiController::class, 'destroy'])->name('notifikasi.hapus');
     });
 
     Route::prefix('/jenis-inventaris')->group(function () {

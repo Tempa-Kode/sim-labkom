@@ -43,13 +43,13 @@
                             <div class="row mb-3">
                                 <label class="col-sm-2 col-form-label" for="waktu_mulai">Waktu Mulai</label>
                                 <div class="col-sm-10">
-                                    <input class="form-control @error('waktu_mulai') is-invalid @enderror" type="time" id="waktu_mulai" name="waktu_mulai" value="{{ old('waktu_mulai', $jadwal->waktu_mulai) }}"/>
+                                    <input class="form-control @error('waktu_mulai') is-invalid @enderror" type="time" id="waktu_mulai" name="waktu_mulai" value="{{ \Illuminate\Support\Str::of(old('waktu_mulai', $jadwal->waktu_mulai))->substr(0,5) }}" step="60"/>
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <label class="col-sm-2 col-form-label" for="waktu_selesai">Waktu Selesai</label>
                                 <div class="col-sm-10">
-                                    <input class="form-control @error('waktu_selesai') is-invalid @enderror" type="time" id="waktu_selesai" name="waktu_selesai" value="{{ old('waktu_selesai', $jadwal->waktu_selesai) }}"/>
+                                    <input class="form-control @error('waktu_selesai') is-invalid @enderror" type="time" id="waktu_selesai" name="waktu_selesai" value="{{ \Illuminate\Support\Str::of(old('waktu_selesai', $jadwal->waktu_selesai))->substr(0,5) }}" step="60"/>
                                 </div>
                             </div>
                             <div class="row mb-3">

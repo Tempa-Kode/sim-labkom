@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\JadwalLaboratorium;
+use App\Models\Notifikasi;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
 
@@ -42,8 +43,10 @@ class JadwalLabController extends Controller
         $validasi = $request->validate([
             'id_ruang_lab' => 'required|exists:tb_ruang_lab,id',
             'hari' => 'required|string|max:10',
-            'waktu_mulai' => 'required|date_format:H:i',
-            'waktu_selesai' => 'required|date_format:H:i|after:waktu_mulai',
+            // mulai 00:00..23:59
+            'waktu_mulai' => ['required','regex:/^(?:[01]\d|2[0-3]):[0-5]\d$/'],
+            // selesai 00:00..24:00 (24:00 diartikan akhir hari)
+            'waktu_selesai' => ['required','regex:/^(?:[01]\d|2[0-3]|24):[0-5]\d$/'],
             'id_dosen' => 'required|exists:tb_dosen,id',
             'status_ruang' => 'required|string|max:20',
         ], [
@@ -51,10 +54,23 @@ class JadwalLabController extends Controller
             'hari.required' => 'Hari harus diisi.',
             'waktu_mulai.required' => 'Waktu mulai harus diisi.',
             'waktu_selesai.required' => 'Waktu selesai harus diisi.',
-            'waktu_selesai.after' => 'Waktu selesai harus setelah waktu mulai.',
+            'waktu_mulai.regex' => 'Format waktu mulai tidak valid.',
+            'waktu_selesai.regex' => 'Format waktu selesai tidak valid.',
             'id_dosen.required' => 'Dosen harus dipilih.',
             'status_ruang.required' => 'Status ruang harus dipilih.',
         ]);
+
+        // Cek bentrok jadwal (overlap) pada ruang dan hari yang sama
+        $hasConflict = JadwalLaboratorium::where('id_ruang_lab', $request->id_ruang_lab)
+            ->where('hari', $request->hari)
+            ->where(function ($q) use ($request) {
+                $q->where('waktu_mulai', '<', $request->waktu_selesai)
+                  ->where('waktu_selesai', '>', $request->waktu_mulai);
+            })
+            ->exists();
+        if ($hasConflict) {
+            return redirect()->back()->withErrors(['error' => 'Jadwal bentrok dengan jadwal lain pada ruang dan hari yang sama.'])->withInput();
+        }
 
         DB::beginTransaction();
 
@@ -95,8 +111,8 @@ class JadwalLabController extends Controller
         $validasi = $request->validate([
             'id_ruang_lab' => 'required|exists:tb_ruang_lab,id',
             'hari' => 'required|string|max:10',
-            'waktu_mulai' => 'required|date_format:H:i:s',
-            'waktu_selesai' => 'required|date_format:H:i:s|after:waktu_mulai',
+            'waktu_mulai' => 'required|date_format:H:i',
+            'waktu_selesai' => 'required|date_format:H:i|after:waktu_mulai',
             'id_dosen' => 'required|exists:tb_dosen,id',
             'status_ruang' => 'required|string|max:20',
         ], [
@@ -108,6 +124,19 @@ class JadwalLabController extends Controller
             'id_dosen.required' => 'Dosen harus dipilih.',
             'status_ruang.required' => 'Status ruang harus dipilih.',
         ]);
+        // Cek bentrok jadwal (overlap) saat update, kecuali diri sendiri
+        $hasConflict = JadwalLaboratorium::where('id_ruang_lab', $request->id_ruang_lab)
+            ->where('hari', $request->hari)
+            ->where('id', '!=', $jadwal->id)
+            ->where(function ($q) use ($request) {
+                $q->where('waktu_mulai', '<', $request->waktu_selesai)
+                  ->where('waktu_selesai', '>', $request->waktu_mulai);
+            })
+            ->exists();
+        if ($hasConflict) {
+            return redirect()->back()->withErrors(['error' => 'Jadwal bentrok dengan jadwal lain pada ruang dan hari yang sama.'])->withInput();
+        }
+
         DB::beginTransaction();
         try {
             $jadwal->update($validasi);
@@ -215,5 +244,49 @@ class JadwalLabController extends Controller
         ->filterWaktu($waktu)
         ->get();
         return view('home.laboratorium', compact('dataJadwal', 'tanggalHariIni', 'hari', 'waktu'));
+    }
+
+    /**
+     * Ubah status ruang (digunakan/kosong) dan opsional buat notifikasi jika batal
+     */
+    public function ubahStatus(Request $request, $id)
+    {
+        $request->validate([
+            'status_ruang' => 'required|in:digunakan,kosong',
+        ]);
+        $jadwal = JadwalLaboratorium::findOrFail($id);
+        $jadwal->status_ruang = $request->status_ruang;
+        $jadwal->save();
+
+        // Jika ada alasan batal, buat notifikasi
+        if ($request->status_ruang === 'kosong' && $request->filled('alasan')) {
+            Notifikasi::create([
+                'jadwal_id' => $jadwal->id,
+                'judul' => 'Batal Pakai',
+                'pesan' => $request->input('alasan'),
+                'status' => 'baru',
+            ]);
+        }
+        return back()->with('success', 'Status ruang diperbarui.');
+    }
+
+    /**
+     * Dipanggil saat waktu habis untuk kirim notifikasi otomatis
+     */
+    public function notifySelesai(Request $request, $id)
+    {
+        $jadwal = JadwalLaboratorium::with(['ruangLaboratorium','dosen'])->findOrFail($id);
+            // Ubah status jadi kosong
+            $jadwal->status_ruang = 'kosong';
+            $jadwal->save();
+
+            // Buat notifikasi
+            Notifikasi::create([
+                'jadwal_id' => $jadwal->id,
+                'judul' => 'Waktu Habis',
+                'pesan' => 'Sesi di '.$jadwal->ruangLaboratorium->nama_ruang.' ('.$jadwal->hari.' '.$jadwal->waktu_mulai.'-'.$jadwal->waktu_selesai.') telah selesai. Silakan konfirmasi jadwal berikutnya.',
+                'status' => 'baru',
+            ]);
+            return response()->json(['ok' => true, 'status' => $jadwal->status_ruang]);
     }
 }
