@@ -195,22 +195,18 @@ class InventarisController extends Controller
         $sheet->setCellValue('A1', 'No');
         $sheet->setCellValue('B1', 'Nama Barang');
         $sheet->setCellValue('C1', 'Kode Barang');
-        $sheet->setCellValue('D1', 'Kondisi');
-        $sheet->setCellValue('E1', 'Ket');
-        $sheet->setCellValue('F1', 'Jenis');
-        $sheet->setCellValue('G1', 'Jumlah');
-        $sheet->setCellValue('H1', 'Ruangan');
+        $sheet->setCellValue('D1', 'Ket');
+        $sheet->setCellValue('E1', 'Jumlah');
+        $sheet->setCellValue('F1', 'Ruangan');
 
         $row = 2;
         foreach ($data as $index => $item) {
             $sheet->setCellValue('A' . $row, $index + 1);
             $sheet->setCellValue('B' . $row, $item->nama_barang);
             $sheet->setCellValue('C' . $row, $item->kode_barang);
-            $sheet->setCellValue('D' . $row, $item->kondisi);
-            $sheet->setCellValue('E' . $row, $item->keterangan ?? '-');
-            $sheet->setCellValue('F' . $row, $item->jenisInventaris->nama_jenis);
-            $sheet->setCellValue('G' . $row, $item->jumlah);
-            $sheet->setCellValue('H' . $row, $item->ruangLaboratorium->nama_ruang);
+            $sheet->setCellValue('D' . $row, $item->keterangan ?? '-');
+            $sheet->setCellValue('E' . $row, $item->jumlah);
+            $sheet->setCellValue('F' . $row, $item->ruangLaboratorium->nama_ruang);
             $row++;
         }
 
