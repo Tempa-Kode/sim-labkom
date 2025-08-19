@@ -26,7 +26,7 @@ class InventarisController extends Controller
     */
     public function exportAllPdf()
     {
-        $ruangLab = RuangLaboratorium::with('inventaris','inventaris.jenisInventaris')->get();
+        $ruangLab = RuangLaboratorium::with('inventaris')->get();
         // dd($ruangLab);
         $pdf = Pdf::loadView('inventaris.export-all-pdf', compact('ruangLab'));
         $pdf->setPaper('A4', 'landscape');

@@ -271,13 +271,11 @@
                 <table class="data-table">
                     <thead>
                         <tr>
-                            <th style="width: 25px;">No</th>
-                            <th style="width: 80px;">Kode Barang</th>
-                            <th style="width: 120px;">Nama Barang</th>
-                            <th style="width: 60px;">Jenis</th>
-                            <th style="width: 40px;">Jumlah</th>
-                            <th style="width: 60px;">Kondisi</th>
-                            <th>Keterangan</th>
+                            <th style="width: 30px;">No</th>
+                            <th style="width: 100px;">Kode Barang</th>
+                            <th style="width: 180px;">Nama Barang</th>
+                            <th style="width: 50px;">Jumlah</th>
+                            <th style="width: auto;">Keterangan</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -286,9 +284,7 @@
                                 <td>{{ $itemIndex + 1 }}</td>
                                 <td>{{ $inventaris->kode_barang ?? '-' }}</td>
                                 <td class="text-left">{{ $inventaris->nama_barang }}</td>
-                                <td>{{ $inventaris->jenisInventaris->nama_jenis ?? '-' }}</td>
                                 <td>{{ $inventaris->jumlah }}</td>
-                                <td>{{ $inventaris->kondisi }}</td>
                                 <td class="text-left">{{ $inventaris->keterangan ?? '-' }}</td>
                             </tr>
                         @endforeach
