@@ -65,7 +65,7 @@
                         <h1>FAKULTAS ILMU KOMPUTER</h1>
                         <h2>UNIVERSITAS KATOLIK SANTO THOMAS MEDAN</h2>
                         <p>Jl. Setia Budi No. 479, Tj. Sari, Kec. Medan Selayang, Kota Medan, Sumatera Utara 20133</p>
-                        <span>No. Telp : xxxxxxxxxxx </span> <span>Email : fikom@ust.ac.id</span>
+                        <span>No. Telp (061) 8210161 </span> <span>Email : fikom@ust.ac.id</span>
                     </div>
                 </td>
                 <td>
