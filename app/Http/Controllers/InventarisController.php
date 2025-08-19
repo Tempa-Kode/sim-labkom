@@ -55,9 +55,8 @@ class InventarisController extends Controller
     */
     public function tambah()
     {
-        $jenis = JenisInventaris::all();
         $ruangLab = RuangLaboratorium::all();
-        return view('inventaris.tambah', compact('jenis', 'ruangLab'));
+        return view('inventaris.tambah', compact('ruangLab'));
     }
 
     /*
@@ -106,9 +105,8 @@ class InventarisController extends Controller
             return redirect()->route('inventaris.index')->withErrors(['error' => 'Inventaris tidak ditemukan']);
         }
 
-        $jenis = JenisInventaris::all();
         $ruangLab = RuangLaboratorium::all();
-        return view('inventaris.edit', compact('inventaris', 'jenis', 'ruangLab'));
+        return view('inventaris.edit', compact('inventaris','ruangLab'));
     }
 
     /*
