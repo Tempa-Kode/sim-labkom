@@ -77,7 +77,8 @@
 <div class="container">
     <footer class="py-3 my-4 border-top text-center">
         <div class="text-center">
-            <p class="mb-3 mb-md-0 text-muted text-center">© 2025 - SIM-LABKOM Fakultas Ilmu Komputer Universitas Katolik Santo Thomas</p>
+            <p class="mb-1 mb-md-0 text-muted text-center">© 2025 - Copyright Saveria Silvi Yanti Zebua</p>
+            <p class="mb-3 mb-md-0 text-muted text-center">SIM-LABKOM Fakultas Ilmu Komputer Universitas Katolik Santo Thomas</p>
         </div>
     </footer>
 </div>

@@ -18,6 +18,7 @@ class Inventaris extends Model
         'kode_barang',
         'keterangan',
         'jumlah',
+        'kondisi',
         'id_ruang',
         'id_pengguna',
     ];

@@ -32,7 +32,7 @@
                             <th>Kode Barang</th>
                             <th>Ket</th>
                             <th>Jumlah</th>
-                            <th>Ruangan</th>
+                            <th>Kondisi</th>
                             <th>Nama Petugas</th>
                             @if (Auth::user()->hak_akses == 'aslab')
                                 <th>Aksi</th>
@@ -47,7 +47,11 @@
                                 <td>{{ $jadwal->kode_barang ?? "-" }}</td>
                                 <td>{{ $jadwal->keterangan ?? "-" }}</td>
                                 <td>{{ $jadwal->jumlah }}</td>
-                                <td>{{ $jadwal->ruangLaboratorium->nama_ruang }}</td>
+                                <td>
+                                    <span class="badge rounded-pill bg-label-{{ $jadwal->kondisi == 'layak pakai' ? 'success' : 'danger' }}">
+                                        {{ $jadwal->kondisi ?? 'layak pakai' }}
+                                    </span>
+                                </td>
                                 <td>{{ $jadwal->aslab->nama }}</td>
                                 @if (Auth::user()->hak_akses == 'aslab')
                                     <td>

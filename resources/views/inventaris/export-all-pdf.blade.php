@@ -275,6 +275,7 @@
                             <th style="width: 100px;">Kode Barang</th>
                             <th style="width: 180px;">Nama Barang</th>
                             <th style="width: 50px;">Jumlah</th>
+                            <th style="width: 80px;">Kondisi</th>
                             <th style="width: auto;">Keterangan</th>
                         </tr>
                     </thead>
@@ -285,6 +286,9 @@
                                 <td>{{ $inventaris->kode_barang ?? '-' }}</td>
                                 <td class="text-left">{{ $inventaris->nama_barang }}</td>
                                 <td>{{ $inventaris->jumlah }}</td>
+                                <td class="text-center" style="color: {{ $inventaris->kondisi == 'layak pakai' ? '#28a745' : '#dc3545' }};">
+                                    {{ $inventaris->kondisi ?? 'layak pakai' }}
+                                </td>
                                 <td class="text-left">{{ $inventaris->keterangan ?? '-' }}</td>
                             </tr>
                         @endforeach
@@ -307,6 +311,58 @@
             <p><strong>Tidak ada data laboratorium yang tersedia</strong></p>
         </div>
     @endforelse
+
+    <!-- Catatan Barang Rusak -->
+    @php
+        $barangRusak = collect();
+        foreach($ruangLab as $lab) {
+            foreach($lab->inventaris as $item) {
+                if($item->kondisi == 'tidak layak pakai') {
+                    $barangRusak->push([
+                        'ruang' => $lab->nama_ruang,
+                        'nama_barang' => $item->nama_barang,
+                        'kode_barang' => $item->kode_barang,
+                        'jumlah' => $item->jumlah
+                    ]);
+                }
+            }
+        }
+    @endphp
+
+    @if($barangRusak->count() > 0)
+        <div class="page-break" style="margin-top: 30px;">
+            <h3 style="text-align: center; margin-bottom: 20px; color: #d32f2f;">CATATAN BARANG RUSAK</h3>
+            <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+                <thead>
+                    <tr style="background-color: #f5f5f5;">
+                        <th style="border: 1px solid #333; padding: 8px; text-align: center;">No</th>
+                        <th style="border: 1px solid #333; padding: 8px; text-align: center;">Ruang Lab</th>
+                        <th style="border: 1px solid #333; padding: 8px; text-align: center;">Kode Barang</th>
+                        <th style="border: 1px solid #333; padding: 8px; text-align: center;">Nama Barang</th>
+                        <th style="border: 1px solid #333; padding: 8px; text-align: center;">Jumlah</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($barangRusak as $index => $item)
+                        <tr>
+                            <td style="border: 1px solid #333; padding: 8px; text-align: center;">{{ $index + 1 }}</td>
+                            <td style="border: 1px solid #333; padding: 8px; text-align: center;">{{ $item['ruang'] }}</td>
+                            <td style="border: 1px solid #333; padding: 8px; text-align: center;">{{ $item['kode_barang'] ?? '-' }}</td>
+                            <td style="border: 1px solid #333; padding: 8px; text-align: left;">{{ $item['nama_barang'] }}</td>
+                            <td style="border: 1px solid #333; padding: 8px; text-align: center;">{{ $item['jumlah'] }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+            <div style="background-color: #fff3cd; border: 1px solid #ffeaa7; padding: 15px; border-radius: 5px;">
+                <p style="margin: 0; color: #856404; font-weight: bold;">⚠️ PERHATIAN:</p>
+                <p style="margin: 5px 0 0 0; color: #856404;">
+                    Total {{ $barangRusak->count() }} item barang dalam kondisi tidak layak pakai memerlukan perhatian khusus.
+                    Mohon segera dilakukan perbaikan atau penggantian untuk menjaga kualitas layanan laboratorium.
+                </p>
+            </div>
+        </div>
+    @endif
 
     <!-- Footer -->
     <div class="footer">

@@ -69,6 +69,7 @@ class InventarisController extends Controller
             'kode_barang' => 'nullable|unique:tb_inventaris,id',
             'keterangan' => 'nullable|max:100',
             'jumlah' => 'required|integer|min:1',
+            'kondisi' => 'required|in:layak pakai,tidak layak pakai',
             'id_ruang' => 'required|exists:tb_ruang_lab,id',
         ], [
             'nama_barang.required' => 'Nama barang harus diisi',
@@ -78,6 +79,8 @@ class InventarisController extends Controller
             'jumlah.required' => 'Jumlah harus diisi',
             'jumlah.integer' => 'Jumlah harus berupa angka',
             'jumlah.min' => 'Jumlah minimal 1',
+            'kondisi.required' => 'Kondisi barang harus dipilih',
+            'kondisi.in' => 'Kondisi barang harus layak pakai atau tidak layak pakai',
             'id_ruang.required' => 'Ruang laboratorium harus dipilih',
             'id_ruang.exists' => 'Ruang laboratorium tidak valid',
         ]);
@@ -124,6 +127,7 @@ class InventarisController extends Controller
             'kode_barang' => 'nullable|unique:tb_inventaris,id,' . $inventaris->id,
             'keterangan' => 'nullable|max:100',
             'jumlah' => 'required|integer|min:1',
+            'kondisi' => 'required|in:layak pakai,tidak layak pakai',
             'id_ruang' => 'required|exists:tb_ruang_lab,id',
         ], [
             'nama_barang.required' => 'Nama barang harus diisi',
@@ -133,6 +137,8 @@ class InventarisController extends Controller
             'jumlah.required' => 'Jumlah harus diisi',
             'jumlah.integer' => 'Jumlah harus berupa angka',
             'jumlah.min' => 'Jumlah minimal 1',
+            'kondisi.required' => 'Kondisi barang harus dipilih',
+            'kondisi.in' => 'Kondisi barang harus layak pakai atau tidak layak pakai',
             'id_ruang.required' => 'Ruang laboratorium harus dipilih',
             'id_ruang.exists' => 'Ruang laboratorium tidak valid',
         ]);

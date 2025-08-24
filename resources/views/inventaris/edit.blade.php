@@ -41,6 +41,16 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label" for="kondisi">Kondisi Barang</label>
+                                <div class="col-sm-10">
+                                    <select id="kondisi" name="kondisi" class="form-select @error('kondisi') is-invalid @enderror">
+                                        <option value="" hidden>Pilih Kondisi</option>
+                                        <option value="layak pakai" @if(old('kondisi', $inventaris->kondisi) == 'layak pakai') selected @endif>Layak Pakai</option>
+                                        <option value="tidak layak pakai" @if(old('kondisi', $inventaris->kondisi) == 'tidak layak pakai') selected @endif>Tidak Layak Pakai</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
                                 <label class="col-sm-2 col-form-label" for="id_ruang">Ruangan</label>
                                 <div class="col-sm-10">
                                     <select id="id_ruang" name="id_ruang" class="form-select @error('id_ruang') is-invalid @enderror">

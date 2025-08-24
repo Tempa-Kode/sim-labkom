@@ -169,16 +169,50 @@
         }, 300);
     }
 
+    // Validasi waktu real-time
+    function validateTime() {
+        const tanggalPemakaian = document.getElementById('tanggal_pemakaian').value;
+        const jamMulai = document.getElementById('jam_mulai').value;
+
+        if (tanggalPemakaian && jamMulai) {
+            const sekarang = new Date();
+            const tanggalWaktuPemakaian = new Date(tanggalPemakaian + 'T' + jamMulai);
+
+            // Cek apakah waktu yang dipilih sudah lewat
+            if (tanggalWaktuPemakaian < sekarang) {
+                document.getElementById('jam_mulai').setCustomValidity('Tidak dapat mengajukan penggunaan lab pada jam yang sudah lewat');
+                document.getElementById('jam_mulai').reportValidity();
+                return false;
+            } else {
+                document.getElementById('jam_mulai').setCustomValidity('');
+                return true;
+            }
+        }
+        return true;
+    }
+
     // Update pilihan hari saat tanggal pemakaian berubah (agar konsisten dengan bahasa)
     document.getElementById('tanggal_pemakaian').addEventListener('change', function() {
-        // Biarkan user memilih manual jika perlu; tidak mengubah opsi otomatis agar sederhana
-        // Namun tetap coba refresh ketersediaan ruang
+        validateTime();
         loadRuangTersedia();
     });
+
+    document.getElementById('jam_mulai').addEventListener('change', function() {
+        validateTime();
+    });
+
     ['hari','jam_mulai','jam_selesai'].forEach(id => {
         const el = document.getElementById(id);
         el.addEventListener('change', loadRuangTersedia);
         el.addEventListener('input', loadRuangTersedia);
+    });
+
+    // Validasi sebelum submit form
+    document.querySelector('form').addEventListener('submit', function(e) {
+        if (!validateTime()) {
+            e.preventDefault();
+            return false;
+        }
     });
 
     // initial load in case fields pre-filled

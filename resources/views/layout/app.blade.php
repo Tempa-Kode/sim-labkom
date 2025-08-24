@@ -161,7 +161,7 @@
                   <script>
                       document.write(new Date().getFullYear());
                   </script>
-                  - SIM-LABKOM Fakultas Ilmu Komputer Universitas Katolik Santo Thomas
+                  - Copyright Saveria Silvi Yanti Zebua SIM-LABKOM Fakultas Ilmu Komputer Universitas Katolik Santo Thomas
                 </div>
               </div>
             </footer>
