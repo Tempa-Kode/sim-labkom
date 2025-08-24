@@ -74,8 +74,8 @@
                                             <strong>{{ $currentJam }}</strong>: {{ $jadwal->waktu_mulai }} - {{ $jadwal->waktu_selesai }}
                                         </small>
                                     </div>
-                                    <input type="hidden" id="waktu_mulai" name="waktu_mulai" value="{{ old('waktu_mulai', $jadwal->waktu_mulai) }}">
-                                    <input type="hidden" id="waktu_selesai" name="waktu_selesai" value="{{ old('waktu_selesai', $jadwal->waktu_selesai) }}">
+                                    <input type="hidden" id="waktu_mulai" name="waktu_mulai" value="{{ old('waktu_mulai') ? date('H:i', strtotime(old('waktu_mulai'))) : date('H:i', strtotime($jadwal->waktu_mulai)) }}">
+                                    <input type="hidden" id="waktu_selesai" name="waktu_selesai" value="{{ old('waktu_selesai') ? date('H:i', strtotime(old('waktu_selesai'))) : date('H:i', strtotime($jadwal->waktu_selesai)) }}">
                                 </div>
                             </div>
                             <div class="row mb-3">
@@ -97,6 +97,17 @@
                                         <option value="digunakan" @if(old('status_ruang', $jadwal->status_ruang) == 'digunakan') selected @endif>Digunakan</option>
                                         <option value="kosong" @if(old('status_ruang', $jadwal->status_ruang) == 'kosong') selected @endif>Kosong</option>
                                     </select>
+                                </div>
+                            </div>
+                            <div class="row mb-3" id="alasan-kosong-field" style="display: none;">
+                                <label class="col-sm-2 col-form-label" for="alasan_kosong">Alasan Kosong</label>
+                                <div class="col-sm-10">
+                                    <textarea id="alasan_kosong" name="alasan_kosong" class="form-control @error('alasan_kosong') is-invalid @enderror"
+                                        rows="3" maxlength="500" placeholder="Contoh: Dosen sakit, ada urusan mendadak, jam sudah lewat, libur nasional, maintenance ruang, dll.">{{ old('alasan_kosong', $jadwal->alasan_kosong) }}</textarea>
+                                    <div class="form-text">
+                                        <small class="text-muted">Hanya wajib diisi jika status ruang "Kosong". Jelaskan alasan mengapa ruang kosong.</small>
+                                        <small id="char-count-edit" class="text-muted float-end">{{ strlen(old('alasan_kosong', $jadwal->alasan_kosong ?? '')) }}/500 karakter</small>
+                                    </div>
                                 </div>
                             </div>
                             <div class="row justify-content-end">
@@ -232,6 +243,40 @@
         document.addEventListener('DOMContentLoaded', function() {
             updateJamDropdown();
             validateScheduleTime();
+            toggleAlasanKosong(); // Check initial state
+        });
+
+        // Show/hide alasan kosong berdasarkan status ruang
+        function toggleAlasanKosong() {
+            const statusRuang = document.getElementById('status_ruang').value;
+            const alasanKosongField = document.getElementById('alasan-kosong-field');
+
+            if (statusRuang === 'kosong') {
+                alasanKosongField.style.display = 'flex';
+            } else {
+                alasanKosongField.style.display = 'none';
+                document.getElementById('alasan_kosong').value = ''; // Reset value
+            }
+        }
+
+        // Event listener untuk status ruang
+        document.getElementById('status_ruang').addEventListener('change', toggleAlasanKosong);
+
+        // Character counter untuk textarea alasan kosong
+        document.getElementById('alasan_kosong').addEventListener('input', function() {
+            const textarea = this;
+            const charCount = document.getElementById('char-count-edit');
+            const currentLength = textarea.value.length;
+            charCount.textContent = currentLength + '/500 karakter';
+
+            // Ubah warna jika mendekati limit
+            if (currentLength > 450) {
+                charCount.className = 'text-danger';
+            } else if (currentLength > 400) {
+                charCount.className = 'text-warning';
+            } else {
+                charCount.className = 'text-muted';
+            }
         });
     </script>
 @endsection

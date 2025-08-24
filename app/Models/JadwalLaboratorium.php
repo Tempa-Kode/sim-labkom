@@ -20,6 +20,8 @@ class JadwalLaboratorium extends Model
         'waktu_selesai',
         'id_dosen',
         'status_ruang',
+        'dibuat_oleh',
+        'alasan_kosong',
     ];
 
     public function dosen()
@@ -30,6 +32,11 @@ class JadwalLaboratorium extends Model
     public function ruangLaboratorium()
     {
         return $this->belongsTo(RuangLaboratorium::class, 'id_ruang_lab');
+    }
+
+    public function pembuatJadwal()
+    {
+        return $this->belongsTo(User::class, 'dibuat_oleh');
     }
 
     public function scopeFilterHari($query, $hari)

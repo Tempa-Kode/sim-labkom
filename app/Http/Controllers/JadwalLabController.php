@@ -49,6 +49,7 @@ class JadwalLabController extends Controller
             'waktu_selesai' => ['required','regex:/^(?:[01]\d|2[0-3]|24):[0-5]\d$/'],
             'id_dosen' => 'required|exists:tb_dosen,id',
             'status_ruang' => 'required|string|max:20',
+            'alasan_kosong' => 'nullable|string|max:500',
         ], [
             'id_ruang_lab.required' => 'Ruang lab harus dipilih.',
             'hari.required' => 'Hari harus diisi.',
@@ -86,6 +87,9 @@ class JadwalLabController extends Controller
         DB::beginTransaction();
 
         try{
+            // Tambahkan ID user yang membuat jadwal
+            $validasi['dibuat_oleh'] = auth()->id();
+
             JadwalLaboratorium::create($validasi);
             DB::commit();
             return redirect()->route('jadwalLab.index')->with('success', 'Jadwal berhasil ditambahkan.');
@@ -126,6 +130,7 @@ class JadwalLabController extends Controller
             'waktu_selesai' => 'required|date_format:H:i|after:waktu_mulai',
             'id_dosen' => 'required|exists:tb_dosen,id',
             'status_ruang' => 'required|string|max:20',
+            'alasan_kosong' => 'nullable|string|max:500',
         ], [
             'id_ruang_lab.required' => 'Ruang lab harus dipilih.',
             'hari.required' => 'Hari harus diisi.',
@@ -162,6 +167,7 @@ class JadwalLabController extends Controller
 
         DB::beginTransaction();
         try {
+            $validasi['dibuat_oleh'] = auth()->id();
             $jadwal->update($validasi);
             DB::commit();
             return redirect()->route('jadwalLab.index')->with('success', 'Jadwal berhasil diperbarui.');
@@ -258,7 +264,7 @@ class JadwalLabController extends Controller
         $tanggalHariIni = \Carbon\Carbon::now()->locale('id')->translatedFormat('l, d F Y');
 
 
-        $dataJadwal = JadwalLaboratorium::with(['ruangLaboratorium', 'dosen', 'dosen.user'])
+        $dataJadwal = JadwalLaboratorium::with(['ruangLaboratorium', 'dosen', 'dosen.user', 'pembuatJadwal'])
         ->join('tb_ruang_lab', 'tb_ruang_lab.id', '=', 'tb_jadwal_lab.id_ruang_lab')
         // ->orderBy('tb_ruang_lab.nama_ruang', 'asc')
         ->orderBy('waktu_mulai', 'asc')
@@ -276,17 +282,28 @@ class JadwalLabController extends Controller
     {
         $request->validate([
             'status_ruang' => 'required|in:digunakan,kosong',
+            'alasan_kosong' => 'required_if:status_ruang,kosong|nullable|string|max:500',
         ]);
+
         $jadwal = JadwalLaboratorium::findOrFail($id);
+        $jadwal->dibuat_oleh = auth()->id();
         $jadwal->status_ruang = $request->status_ruang;
+
+        // Update alasan kosong
+        if ($request->status_ruang === 'kosong') {
+            $jadwal->alasan_kosong = $request->alasan_kosong;
+        } else {
+            $jadwal->alasan_kosong = null; // Reset jika status bukan kosong
+        }
+
         $jadwal->save();
 
         // Jika ada alasan batal, buat notifikasi
-        if ($request->status_ruang === 'kosong' && $request->filled('alasan')) {
+        if ($request->status_ruang === 'kosong' && $request->filled('alasan_kosong')) {
             Notifikasi::create([
                 'jadwal_id' => $jadwal->id,
                 'judul' => 'Batal Pakai',
-                'pesan' => $request->input('alasan'),
+                'pesan' => $request->input('alasan_kosong'),
                 'status' => 'baru',
             ]);
         }

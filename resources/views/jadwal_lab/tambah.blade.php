@@ -95,6 +95,18 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="row mb-3" id="alasan-kosong-field" style="display: none;">
+                                <label class="col-sm-2 col-form-label" for="alasan_kosong">Alasan Kosong</label>
+                                <div class="col-sm-10">
+                                    <textarea id="alasan_kosong" name="alasan_kosong" class="form-control @error('alasan_kosong') is-invalid @enderror" 
+                                        rows="3" placeholder="Contoh: Dosen sakit, ada urusan mendadak, jam sudah lewat, libur nasional, maintenance ruang, dll." 
+                                        maxlength="500">{{ old('alasan_kosong') }}</textarea>
+                                    <div class="form-text d-flex justify-content-between">
+                                        <small class="text-muted">Hanya wajib diisi jika status ruang "Kosong". Jelaskan alasan mengapa ruang kosong.</small>
+                                        <small class="text-muted" id="char-count-tambah">0/500 karakter</small>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="row justify-content-end">
                                 <div class="col-sm-10">
                                     <button type="submit" class="btn btn-primary">Simpan</button>
@@ -236,6 +248,40 @@
         // Inisialisasi saat halaman dimuat
         document.addEventListener('DOMContentLoaded', function() {
             updateJamDropdown();
+            toggleAlasanKosong(); // Check initial state
+        });
+
+        // Show/hide alasan kosong berdasarkan status ruang
+        function toggleAlasanKosong() {
+            const statusRuang = document.getElementById('status_ruang').value;
+            const alasanKosongField = document.getElementById('alasan-kosong-field');
+
+            if (statusRuang === 'kosong') {
+                alasanKosongField.style.display = 'flex';
+            } else {
+                alasanKosongField.style.display = 'none';
+                document.getElementById('alasan_kosong').value = ''; // Reset value
+            }
+        }
+
+        // Event listener untuk status ruang
+        document.getElementById('status_ruang').addEventListener('change', toggleAlasanKosong);
+
+        // Character counter untuk textarea alasan kosong
+        document.getElementById('alasan_kosong').addEventListener('input', function() {
+            const textarea = this;
+            const charCount = document.getElementById('char-count-tambah');
+            const currentLength = textarea.value.length;
+            charCount.textContent = currentLength + '/500 karakter';
+            
+            // Ubah warna jika mendekati limit
+            if (currentLength > 450) {
+                charCount.className = 'text-danger';
+            } else if (currentLength > 400) {
+                charCount.className = 'text-warning';
+            } else {
+                charCount.className = 'text-muted';
+            }
         });
     </script>
 @endsection

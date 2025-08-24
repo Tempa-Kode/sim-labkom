@@ -28,7 +28,15 @@
                 <div class="row mt-3">
                     <div class="col-md-3">
                         @php
-                            $dowMap = [1=>'senin',2=>'selasa',3=>'rabu',4=>'kamis',5=>'jumat',6=>'sabtu',7=>'minggu'];
+                            $dowMap = [
+                                1 => "senin",
+                                2 => "selasa",
+                                3 => "rabu",
+                                4 => "kamis",
+                                5 => "jumat",
+                                6 => "sabtu",
+                                7 => "minggu",
+                            ];
                             $todayDow = \Carbon\Carbon::now()->dayOfWeekIso; // 1=Mon .. 7=Sun
                             $todayName = $dowMap[$todayDow];
                         @endphp
@@ -52,6 +60,7 @@
                             <th>Jam Kuliah</th>
                             <th>Nama Dosen</th>
                             <th>Status</th>
+                            <th>Alasan Kosong</th>
                             <th>Sisa Waktu</th>
                             @if (Auth::user()->hak_akses == "aslab")
                                 <th>Aksi</th>
@@ -84,8 +93,17 @@
                                     @endswitch
                                 </td>
                                 <td>
-                                    <span class="badge bg-secondary" data-countdown
-                                        data-id="{{ $jadwal->id }}"
+                                    @if ($jadwal->status_ruang === "kosong" && $jadwal->alasan_kosong)
+                                        <span class="text-muted" style="font-size: 12px;"
+                                            title="{{ $jadwal->alasan_kosong }}">
+                                            {{ Str::limit($jadwal->alasan_kosong, 30) }}
+                                        </span>
+                                    @else
+                                        <span class="text-muted">-</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    <span class="badge bg-secondary" data-countdown data-id="{{ $jadwal->id }}"
                                         data-hari="{{ strtolower($jadwal->hari) }}"
                                         data-mulai="{{ $jadwal->waktu_mulai }}"
                                         data-selesai="{{ $jadwal->waktu_selesai }}"
@@ -106,17 +124,26 @@
                                             </button>
                                         </form>
                                         <form action="{{ route("jadwalLab.ubahStatus", $jadwal->id) }}" method="POST"
-                                            class="d-inline ms-2">
+                                            class="d-inline ms-2" id="form-status-{{ $jadwal->id }}">
                                             @csrf
-                                            <select name="status_ruang" class="form-select form-select-sm d-inline-block"
-                                                style="width: auto;">
+                                            <select name="status_ruang"
+                                                class="form-select form-select-sm d-inline-block status-select"
+                                                style="width: auto;" data-jadwal-id="{{ $jadwal->id }}"
+                                                onchange="toggleAlasanKosongQuick({{ $jadwal->id }})">
                                                 <option value="digunakan"
                                                     {{ $jadwal->status_ruang === "digunakan" ? "selected" : "" }}>digunakan
                                                 </option>
                                                 <option value="kosong"
-                                                    {{ $jadwal->status_ruang === "kosong" ? "selected" : "" }}>kosong</option>
+                                                    {{ $jadwal->status_ruang === "kosong" ? "selected" : "" }}>kosong
+                                                </option>
                                             </select>
-                                            <button type="submit" class="btn btn-primary btn-sm">Update</button>
+                                            <div id="alasan-quick-{{ $jadwal->id }}" class="mt-2"
+                                                style="display: {{ $jadwal->status_ruang === "kosong" ? "block" : "none" }};">
+                                                <textarea name="alasan_kosong" class="form-control form-control-sm" rows="2" maxlength="500"
+                                                    placeholder="Alasan kosong (wajib)..." style="width: 200px; font-size: 11px;">{{ $jadwal->alasan_kosong }}</textarea>
+                                                <small class="text-muted">Max 500 karakter</small>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary btn-sm mt-1">Update</button>
                                         </form>
                                     </td>
                                 @endif
@@ -181,14 +208,24 @@
             return h + ":" + m + ":" + ss;
         }
         let timers = [];
-        function clearTimers(){
+
+        function clearTimers() {
             timers.forEach(t => clearInterval(t));
             timers = [];
         }
-        function initCountdown(){
+
+        function initCountdown() {
             clearTimers();
-            const todayName = (function(){
-                const map = {1:'senin',2:'selasa',3:'rabu',4:'kamis',5:'jumat',6:'sabtu',7:'minggu'};
+            const todayName = (function() {
+                const map = {
+                    1: 'senin',
+                    2: 'selasa',
+                    3: 'rabu',
+                    4: 'kamis',
+                    5: 'jumat',
+                    6: 'sabtu',
+                    7: 'minggu'
+                };
                 const d = new Date();
                 // JS: 1=Mon..7=Sun
                 const iso = (d.getDay() === 0) ? 7 : d.getDay();
@@ -196,20 +233,21 @@
             })();
             const toSec = (hhmm) => {
                 if (!hhmm) return null;
-                const [hStr,mStr] = hhmm.split(':');
-                let h = parseInt(hStr,10), m = parseInt(mStr,10)||0;
-                if (h === 24) return 24*3600; // 24:00 as end of day
+                const [hStr, mStr] = hhmm.split(':');
+                let h = parseInt(hStr, 10),
+                    m = parseInt(mStr, 10) || 0;
+                if (h === 24) return 24 * 3600; // 24:00 as end of day
                 if (isNaN(h) || isNaN(m)) return null;
-                return h*3600 + m*60;
+                return h * 3600 + m * 60;
             };
             const nowSec = () => {
                 const n = new Date();
-                return n.getHours()*3600 + n.getMinutes()*60 + n.getSeconds();
+                return n.getHours() * 3600 + n.getMinutes() * 60 + n.getSeconds();
             };
 
             document.querySelectorAll('[data-countdown]').forEach(el => {
-                const hari = (el.getAttribute('data-hari')||'').toLowerCase();
-                const status = (el.getAttribute('data-status')||'').toLowerCase();
+                const hari = (el.getAttribute('data-hari') || '').toLowerCase();
+                const status = (el.getAttribute('data-status') || '').toLowerCase();
                 const mulai = toSec(el.getAttribute('data-mulai'));
                 const selesai = toSec(el.getAttribute('data-selesai'));
                 const id = el.getAttribute('data-id');
@@ -234,19 +272,23 @@
                         clearInterval(t);
                         if (!el.dataset.done) {
                             el.dataset.done = '1';
-                            fetch(`{{ url('/dashboard/jadwal-lab') }}/${id}/notify-selesai`, {
+                            fetch(`{{ url("/dashboard/jadwal-lab") }}/${id}/notify-selesai`, {
                                 method: 'POST',
-                                headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' }
-                            }).then(r=>r.json()).then(resp=>{
-                                // Update status badge in the same row to KOSONG
+                                headers: {
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                }
+                            }).then(r => r.json()).then(resp => {
+                                // Update status badge in the same row to KOSONG (kolom ke-6, index 5)
                                 const row = el.closest('tr');
-                                const statusBtn = row ? row.querySelector('td:nth-child(7) .btn') : null;
+                                const statusBtn = row ? row.querySelector('td:nth-child(6) .btn') :
+                                    null;
                                 if (statusBtn) {
-                                    statusBtn.textContent = (resp && resp.status) ? resp.status : 'kosong';
+                                    statusBtn.textContent = (resp && resp.status) ? resp.status :
+                                        'kosong';
                                     statusBtn.classList.remove('btn-info');
                                     statusBtn.classList.add('btn-warning');
                                 }
-                            }).catch(()=>{});
+                            }).catch(() => {});
                         }
                     } else {
                         el.textContent = formatHMS(remain);
@@ -258,8 +300,41 @@
 
         // Initialize once and on each draw (filter/sort/paginate)
         initCountdown();
-        table.on('draw', function(){
+        table.on('draw', function() {
             initCountdown();
+        });
+
+        // Toggle alasan kosong untuk quick update
+        function toggleAlasanKosongQuick(jadwalId) {
+            const select = document.querySelector(`[data-jadwal-id="${jadwalId}"]`);
+            const alasanDiv = document.getElementById(`alasan-quick-${jadwalId}`);
+            const textarea = alasanDiv.querySelector('textarea');
+
+            if (select.value === 'kosong') {
+                alasanDiv.style.display = 'block';
+                textarea.required = true;
+            } else {
+                alasanDiv.style.display = 'none';
+                textarea.required = false;
+                textarea.value = ''; // Reset value
+            }
+        }
+
+        // Validasi form sebelum submit
+        document.querySelectorAll('[id^="form-status-"]').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                const select = this.querySelector('.status-select');
+                const textarea = this.querySelector('textarea[name="alasan_kosong"]');
+
+                if (select.value === 'kosong') {
+                    if (!textarea.value.trim()) {
+                        e.preventDefault();
+                        alert('Alasan kosong wajib diisi jika status ruang adalah "kosong".');
+                        textarea.focus();
+                        return false;
+                    }
+                }
+            });
         });
     </script>
 @endpush
