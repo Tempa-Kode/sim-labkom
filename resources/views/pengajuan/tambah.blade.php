@@ -17,18 +17,36 @@
                             @csrf
                             @method("POST")
                             <div class="row mb-3">
-                                <label class="col-sm-2 col-form-label" for="jam_mulai">Waktu Mulai</label>
+                                <label class="col-sm-2 col-form-label" for="jam_kode">Jam Kuliah</label>
                                 <div class="col-sm-10">
-                                    <input class="form-control @error("jam_mulai") is-invalid @enderror" type="time"
-                                        id="jam_mulai" name="jam_mulai" value="{{ old("jam_mulai") }}"/>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <label class="col-sm-2 col-form-label" for="jam_selesai">Waktu Selesai</label>
-                                <div class="col-sm-10">
-                                    <input class="form-control @error("jam_selesai") is-invalid @enderror" type="time"
-                                        id="jam_selesai" name="jam_selesai"
-                                        value="{{ old("jam_selesai") }}"/>
+                                    <select id="jam_kode" name="jam_kode" class="form-select @error('jam_kode') is-invalid @enderror">
+                                        <option value="" hidden>Pilih Jam</option>
+                                        @php
+                                            use App\Helpers\JamHelper;
+                                            $allJam = JamHelper::getAllJam();
+                                            $tanggalPemakaian = old('tanggal_pemakaian', date('Y-m-d'));
+                                            $isToday = $tanggalPemakaian === date('Y-m-d');
+                                            $jamSekarang = date('H:i');
+                                        @endphp
+                                        @foreach ($allJam as $jam)
+                                            @php
+                                                $isDisabled = $isToday && $jam['waktu_selesai'] <= $jamSekarang;
+                                            @endphp
+                                            <option value="{{ $jam['kode'] }}"
+                                                data-mulai="{{ $jam['waktu_mulai'] }}"
+                                                data-selesai="{{ $jam['waktu_selesai'] }}"
+                                                title="{{ $jam['waktu_mulai'] }} - {{ $jam['waktu_selesai'] }}{{ $isDisabled ? ' (Sudah Lewat)' : '' }}"
+                                                @if (old('jam_kode') == $jam['kode']) selected @endif
+                                                @if ($isDisabled) disabled style="color: #999; background-color: #f8f9fa;" @endif>
+                                                {{ $jam['label'] }}{{ $isDisabled ? ' (Sudah Lewat)' : '' }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    <div class="form-text">
+                                        <small id="jam-info" class="text-muted">Pilih jam untuk melihat waktu</small>
+                                    </div>
+                                    <input type="hidden" id="jam_mulai" name="jam_mulai" value="{{ old('jam_mulai') }}">
+                                    <input type="hidden" id="jam_selesai" name="jam_selesai" value="{{ old('jam_selesai') }}">
                                 </div>
                             </div>
                             {{-- <div class="row mb-3 ">
@@ -88,7 +106,87 @@
 
 @push('scripts')
 <script>
-    // Hindari duplikasi opsi: debounce, abort request lama, ignore stale responses, dan clear sebelum load
+    // Update dropdown jam berdasarkan tanggal yang dipilih
+    function updateJamDropdown() {
+        const tanggalPemakaian = document.getElementById('tanggal_pemakaian').value;
+        const jamSelect = document.getElementById('jam_kode');
+        const today = new Date().toISOString().split('T')[0];
+        const isToday = tanggalPemakaian === today;
+        
+        if (isToday) {
+            const now = new Date();
+            const jamSekarang = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+            
+            // Update semua option berdasarkan waktu sekarang
+            Array.from(jamSelect.options).forEach(option => {
+                if (option.value) {
+                    const jamSelesai = option.getAttribute('data-selesai');
+                    const isExpired = jamSelesai <= jamSekarang;
+                    
+                    option.disabled = isExpired;
+                    if (isExpired) {
+                        option.style.color = '#999';
+                        option.style.backgroundColor = '#f8f9fa';
+                        option.textContent = option.textContent.replace(' (Sudah Lewat)', '') + ' (Sudah Lewat)';
+                        option.title = option.title.replace(' (Sudah Lewat)', '') + ' (Sudah Lewat)';
+                        
+                        // Reset pilihan jika yang dipilih sudah expired
+                        if (option.selected) {
+                            jamSelect.value = '';
+                            document.getElementById('jam_mulai').value = '';
+                            document.getElementById('jam_selesai').value = '';
+                            document.getElementById('jam-info').innerHTML = 'Pilih jam untuk melihat waktu';
+                            document.getElementById('jam-info').className = 'text-muted';
+                        }
+                    } else {
+                        option.disabled = false;
+                        option.style.color = '';
+                        option.style.backgroundColor = '';
+                        option.textContent = option.textContent.replace(' (Sudah Lewat)', '');
+                        option.title = option.title.replace(' (Sudah Lewat)', '');
+                    }
+                }
+            });
+        } else {
+            // Jika bukan hari ini, aktifkan semua jam
+            Array.from(jamSelect.options).forEach(option => {
+                if (option.value) {
+                    option.disabled = false;
+                    option.style.color = '';
+                    option.style.backgroundColor = '';
+                    option.textContent = option.textContent.replace(' (Sudah Lewat)', '');
+                    option.title = option.title.replace(' (Sudah Lewat)', '');
+                }
+            });
+        }
+    }
+
+    // Auto-fill waktu berdasarkan pilihan jam
+    document.getElementById('jam_kode').addEventListener('change', function() {
+        const selectedOption = this.options[this.selectedIndex];
+        const jamInfo = document.getElementById('jam-info');
+
+        if (selectedOption.value && !selectedOption.disabled) {
+            const mulai = selectedOption.getAttribute('data-mulai');
+            const selesai = selectedOption.getAttribute('data-selesai');
+
+            document.getElementById('jam_mulai').value = mulai;
+            document.getElementById('jam_selesai').value = selesai;
+
+            // Update info waktu
+            jamInfo.innerHTML = `<strong>${selectedOption.text.replace(' (Sudah Lewat)', '')}</strong>: ${mulai} - ${selesai}`;
+            jamInfo.className = 'text-success';
+
+            // Trigger validasi waktu dan load ruang setelah jam diubah
+            validateTime();
+            loadRuangTersedia();
+        } else {
+            document.getElementById('jam_mulai').value = '';
+            document.getElementById('jam_selesai').value = '';
+            jamInfo.innerHTML = 'Pilih jam untuk melihat waktu';
+            jamInfo.className = 'text-muted';
+        }
+    });    // Hindari duplikasi opsi: debounce, abort request lama, ignore stale responses, dan clear sebelum load
     let ruangReqSeq = 0;            // sequence id untuk tiap request
     let ruangActiveSeq = 0;         // seq yang terakhir diproses
     let ruangAbortCtrl = null;      // AbortController untuk batalkan fetch sebelumnya
@@ -172,27 +270,28 @@
     // Validasi waktu real-time
     function validateTime() {
         const tanggalPemakaian = document.getElementById('tanggal_pemakaian').value;
-        const jamMulai = document.getElementById('jam_mulai').value;
+        const jamSelesai = document.getElementById('jam_selesai').value;
 
-        if (tanggalPemakaian && jamMulai) {
+        if (tanggalPemakaian && jamSelesai) {
             const sekarang = new Date();
-            const tanggalWaktuPemakaian = new Date(tanggalPemakaian + 'T' + jamMulai);
+            const tanggalWaktuSelesai = new Date(tanggalPemakaian + 'T' + jamSelesai);
 
-            // Cek apakah waktu yang dipilih sudah lewat
-            if (tanggalWaktuPemakaian < sekarang) {
-                document.getElementById('jam_mulai').setCustomValidity('Tidak dapat mengajukan penggunaan lab pada jam yang sudah lewat');
-                document.getElementById('jam_mulai').reportValidity();
+            // Cek apakah waktu selesai yang dipilih sudah lewat
+            if (tanggalWaktuSelesai < sekarang) {
+                document.getElementById('jam_kode').setCustomValidity('Tidak dapat mengajukan penggunaan lab pada jam yang sudah lewat');
                 return false;
             } else {
-                document.getElementById('jam_mulai').setCustomValidity('');
+                document.getElementById('jam_kode').setCustomValidity('');
                 return true;
             }
         }
+        document.getElementById('jam_kode').setCustomValidity('');
         return true;
     }
 
     // Update pilihan hari saat tanggal pemakaian berubah (agar konsisten dengan bahasa)
     document.getElementById('tanggal_pemakaian').addEventListener('change', function() {
+        updateJamDropdown();
         validateTime();
         loadRuangTersedia();
     });
@@ -201,7 +300,15 @@
         validateTime();
     });
 
-    ['hari','jam_mulai','jam_selesai'].forEach(id => {
+    document.getElementById('jam_selesai').addEventListener('change', function() {
+        validateTime();
+    });
+
+    document.getElementById('jam_kode').addEventListener('change', function() {
+        validateTime();
+    });
+
+    ['hari','jam_kode'].forEach(id => {
         const el = document.getElementById(id);
         el.addEventListener('change', loadRuangTersedia);
         el.addEventListener('input', loadRuangTersedia);
@@ -211,11 +318,15 @@
     document.querySelector('form').addEventListener('submit', function(e) {
         if (!validateTime()) {
             e.preventDefault();
+            alert('Tidak dapat mengajukan penggunaan lab pada jam yang sudah lewat. Silakan pilih jam yang akan datang.');
             return false;
         }
     });
 
-    // initial load in case fields pre-filled
-    document.addEventListener('DOMContentLoaded', loadRuangTersedia);
+    // Inisialisasi saat halaman dimuat
+    document.addEventListener('DOMContentLoaded', function() {
+        updateJamDropdown();
+        loadRuangTersedia();
+    });
 </script>
 @endpush

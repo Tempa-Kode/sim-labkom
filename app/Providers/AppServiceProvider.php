@@ -23,6 +23,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        // Load helper files
+        if (file_exists(app_path('Helpers/JamHelper.php'))) {
+            require_once app_path('Helpers/JamHelper.php');
+        }
     }
 }

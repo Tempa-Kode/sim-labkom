@@ -90,17 +90,17 @@ class PengajuanController extends Controller
             'id_ruang.required' => 'Ruang lab harus dipilih.',
             'tanggal_pengajuan.required' => 'Tanggal pengajuan harus diisi.',
             'tanggal_pemakaian.required' => 'Tanggal pemakaian harus diisi.',
-            'jam_mulai.required' => 'Jam mulai harus diisi.',
-            'jam_selesai.required' => 'Jam selesai harus diisi.',
+            'jam_mulai.required' => 'Waktu mulai harus diisi.',
+            'jam_selesai.required' => 'Waktu selesai harus diisi.',
         ]);
 
         // Validasi waktu: tidak bisa mengajukan jam yang sudah lewat
         $tanggalPemakaian = \Carbon\Carbon::parse($validasi['tanggal_pemakaian']);
-        $jamMulai = \Carbon\Carbon::parse($validasi['tanggal_pemakaian'] . ' ' . $validasi['jam_mulai']);
+        $jamSelesai = \Carbon\Carbon::parse($validasi['tanggal_pemakaian'] . ' ' . $validasi['jam_selesai']);
         $sekarang = \Carbon\Carbon::now();
 
-        // Jika tanggal pemakaian adalah hari ini, cek apakah jam mulai sudah lewat
-        if ($tanggalPemakaian->isToday() && $jamMulai->isPast()) {
+        // Jika tanggal pemakaian adalah hari ini, cek apakah jam selesai sudah lewat
+        if ($tanggalPemakaian->isToday() && $jamSelesai->isPast()) {
             return redirect()->back()->withErrors([
                 'jam_mulai' => 'Tidak dapat mengajukan penggunaan lab pada jam yang sudah lewat. Silakan pilih jam yang akan datang.'
             ])->withInput();

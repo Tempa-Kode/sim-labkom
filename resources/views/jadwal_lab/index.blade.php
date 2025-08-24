@@ -1,3 +1,6 @@
+@php
+    use App\Helpers\JamHelper;
+@endphp
 @extends("layout.app")
 
 @section("judul", "Jadwal Ruang Lab")
@@ -46,8 +49,7 @@
                             <th>No</th>
                             <th>Nama Ruang</th>
                             <th>Hari</th>
-                            <th>Waktu Mulai</th>
-                            <th>Waktu Selesai</th>
+                            <th>Jam Kuliah</th>
                             <th>Nama Dosen</th>
                             <th>Status</th>
                             <th>Sisa Waktu</th>
@@ -62,8 +64,12 @@
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $jadwal->ruangLaboratorium->nama_ruang }}</td>
                                 <td>{{ $jadwal->hari ?? "-" }}</td>
-                                <td>{{ $jadwal->waktu_mulai ?? "-" }}</td>
-                                <td>{{ $jadwal->waktu_selesai ?? "-" }}</td>
+                                <td>
+                                    @php
+                                        // use App\Helpers\JamHelper;
+                                        echo JamHelper::formatJam($jadwal->waktu_mulai, $jadwal->waktu_selesai);
+                                    @endphp
+                                </td>
                                 <td>{{ $jadwal->dosen->nama_dosen ?? "-" }}</td>
                                 <td>
                                     @switch($jadwal->status_ruang)

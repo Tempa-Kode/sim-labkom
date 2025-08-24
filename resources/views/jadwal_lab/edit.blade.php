@@ -41,15 +41,41 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-sm-2 col-form-label" for="waktu_mulai">Waktu Mulai</label>
+                                <label class="col-sm-2 col-form-label" for="jam_kode">Jam Kuliah</label>
                                 <div class="col-sm-10">
-                                    <input class="form-control @error('waktu_mulai') is-invalid @enderror" type="time" id="waktu_mulai" name="waktu_mulai" value="{{ \Illuminate\Support\Str::of(old('waktu_mulai', $jadwal->waktu_mulai))->substr(0,5) }}" step="60"/>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <label class="col-sm-2 col-form-label" for="waktu_selesai">Waktu Selesai</label>
-                                <div class="col-sm-10">
-                                    <input class="form-control @error('waktu_selesai') is-invalid @enderror" type="time" id="waktu_selesai" name="waktu_selesai" value="{{ \Illuminate\Support\Str::of(old('waktu_selesai', $jadwal->waktu_selesai))->substr(0,5) }}" step="60"/>
+                                    <select id="jam_kode" name="jam_kode" class="form-select @error('jam_kode') is-invalid @enderror">
+                                        <option value="" hidden>Pilih Jam</option>
+                                        @php
+                                            use App\Helpers\JamHelper;
+                                            $allJam = JamHelper::getAllJam();
+                                            $currentJam = JamHelper::waktuKeJam($jadwal->waktu_mulai, $jadwal->waktu_selesai);
+                                            $currentKode = str_replace('Jam ', '', $currentJam);
+                                            $hariSekarang = strtolower(\Carbon\Carbon::now()->locale('id')->dayName);
+                                            $jamSekarang = date('H:i');
+                                        @endphp
+                                        @foreach ($allJam as $jam)
+                                            @php
+                                                $selectedHari = old('hari', $jadwal->hari);
+                                                $isToday = $selectedHari === $hariSekarang;
+                                                $isDisabled = $isToday && $jam['waktu_selesai'] <= $jamSekarang;
+                                            @endphp
+                                            <option value="{{ $jam['kode'] }}"
+                                                data-mulai="{{ $jam['waktu_mulai'] }}"
+                                                data-selesai="{{ $jam['waktu_selesai'] }}"
+                                                title="{{ $jam['waktu_mulai'] }} - {{ $jam['waktu_selesai'] }}{{ $isDisabled ? ' (Sudah Lewat)' : '' }}"
+                                                @if (old('jam_kode', $currentKode) == $jam['kode']) selected @endif
+                                                @if ($isDisabled) disabled style="color: #999; background-color: #f8f9fa;" @endif>
+                                                {{ $jam['label'] }}{{ $isDisabled ? ' (Sudah Lewat)' : '' }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    <div class="form-text">
+                                        <small id="jam-info" class="text-success">
+                                            <strong>{{ $currentJam }}</strong>: {{ $jadwal->waktu_mulai }} - {{ $jadwal->waktu_selesai }}
+                                        </small>
+                                    </div>
+                                    <input type="hidden" id="waktu_mulai" name="waktu_mulai" value="{{ old('waktu_mulai', $jadwal->waktu_mulai) }}">
+                                    <input type="hidden" id="waktu_selesai" name="waktu_selesai" value="{{ old('waktu_selesai', $jadwal->waktu_selesai) }}">
                                 </div>
                             </div>
                             <div class="row mb-3">
@@ -85,4 +111,127 @@
             </div>
         </div>
     </div>
+
+    <script>
+        // Update dropdown jam berdasarkan hari yang dipilih
+        function updateJamDropdown() {
+            const hariSelect = document.getElementById('hari');
+            const jamSelect = document.getElementById('jam_kode');
+            const selectedHari = hariSelect.value;
+
+            const now = new Date();
+            const hariSekarang = ['minggu', 'senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu'][now.getDay()];
+            const jamSekarang = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+            const isToday = selectedHari === hariSekarang;
+
+            if (isToday) {
+                // Update semua option berdasarkan waktu sekarang
+                Array.from(jamSelect.options).forEach(option => {
+                    if (option.value) {
+                        const jamSelesai = option.getAttribute('data-selesai');
+                        const isExpired = jamSelesai <= jamSekarang;
+
+                        option.disabled = isExpired;
+                        if (isExpired) {
+                            option.style.color = '#999';
+                            option.style.backgroundColor = '#f8f9fa';
+                            option.textContent = option.textContent.replace(' (Sudah Lewat)', '') + ' (Sudah Lewat)';
+                            option.title = option.title.replace(' (Sudah Lewat)', '') + ' (Sudah Lewat)';
+                        } else {
+                            option.disabled = false;
+                            option.style.color = '';
+                            option.style.backgroundColor = '';
+                            option.textContent = option.textContent.replace(' (Sudah Lewat)', '');
+                            option.title = option.title.replace(' (Sudah Lewat)', '');
+                        }
+                    }
+                });
+            } else {
+                // Jika bukan hari ini, aktifkan semua jam
+                Array.from(jamSelect.options).forEach(option => {
+                    if (option.value) {
+                        option.disabled = false;
+                        option.style.color = '';
+                        option.style.backgroundColor = '';
+                        option.textContent = option.textContent.replace(' (Sudah Lewat)', '');
+                        option.title = option.title.replace(' (Sudah Lewat)', '');
+                    }
+                });
+            }
+        }
+
+        // Auto-fill waktu berdasarkan pilihan jam
+        document.getElementById('jam_kode').addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            const jamInfo = document.getElementById('jam-info');
+
+            if (selectedOption.value && !selectedOption.disabled) {
+                const mulai = selectedOption.getAttribute('data-mulai');
+                const selesai = selectedOption.getAttribute('data-selesai');
+
+                document.getElementById('waktu_mulai').value = mulai;
+                document.getElementById('waktu_selesai').value = selesai;
+
+                // Update info waktu
+                jamInfo.innerHTML = `<strong>${selectedOption.text.replace(' (Sudah Lewat)', '')}</strong>: ${mulai} - ${selesai}`;
+                jamInfo.className = 'text-success';
+
+                // Validasi waktu jika hari yang dipilih adalah hari ini
+                validateScheduleTime();
+            } else {
+                document.getElementById('waktu_mulai').value = '';
+                document.getElementById('waktu_selesai').value = '';
+                jamInfo.innerHTML = 'Pilih jam untuk melihat waktu';
+                jamInfo.className = 'text-muted';
+            }
+        });        // Validasi jadwal waktu
+        function validateScheduleTime() {
+            const hari = document.getElementById('hari').value;
+            const waktuSelesai = document.getElementById('waktu_selesai').value;
+
+            if (hari && waktuSelesai) {
+                const sekarang = new Date();
+                const hariSekarang = ['minggu', 'senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu'][sekarang.getDay()];
+
+                // Jika hari yang dipilih adalah hari ini
+                if (hari === hariSekarang) {
+                    const jamSekarang = sekarang.getHours() + ':' + sekarang.getMinutes().toString().padStart(2, '0');
+
+                    if (waktuSelesai < jamSekarang) {
+                        document.getElementById('waktu_mulai').setCustomValidity('Tidak dapat mengubah jadwal pada jam yang sudah lewat untuk hari ini');
+                        document.getElementById('waktu_mulai').reportValidity();
+                        return false;
+                    } else {
+                        document.getElementById('waktu_mulai').setCustomValidity('');
+                        return true;
+                    }
+                } else {
+                    document.getElementById('waktu_mulai').setCustomValidity('');
+                    return true;
+                }
+            }
+            return true;
+        }
+
+        // Validasi saat hari berubah
+        document.getElementById('hari').addEventListener('change', function() {
+            updateJamDropdown();
+            validateScheduleTime();
+        });
+
+        // Validasi sebelum submit form
+        document.querySelector('form').addEventListener('submit', function(e) {
+            if (!validateScheduleTime()) {
+                e.preventDefault();
+                alert('Tidak dapat mengubah jadwal pada jam yang sudah lewat untuk hari ini.');
+                return false;
+            }
+        });
+
+        // Validasi awal saat halaman dimuat (untuk edit)
+        document.addEventListener('DOMContentLoaded', function() {
+            updateJamDropdown();
+            validateScheduleTime();
+        });
+    </script>
 @endsection

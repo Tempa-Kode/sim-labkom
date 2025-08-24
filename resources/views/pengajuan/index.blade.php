@@ -1,5 +1,6 @@
 @php
     use Carbon\Carbon;
+    use App\Helpers\JamHelper;
 @endphp
 @extends("layout.app")
 
@@ -29,8 +30,7 @@
                             <th>Hari</th>
                             <th>Tgl Pengajuan</th>
                             <th>Tgl Pemakaian</th>
-                            <th>Waktu Mulai</th>
-                            <th>Waktu Selesai</th>
+                            <th>Jam Kuliah</th>
                             <th>Nama Dosen</th>
                             <th>Keterangan</th>
                             @if (Auth::user()->hak_akses != "dosen")
@@ -49,9 +49,10 @@
                                 </td>
                                 <td>{{ $pengajuan->tanggal_pemakaian ? \Carbon\Carbon::parse($pengajuan->tanggal_pemakaian)->locale("id")->translatedFormat("d F Y") : "-" }}
                                 </td>
-                                <td>{{ $pengajuan->jam_mulai ? \Carbon\Carbon::parse($pengajuan->jam_mulai)->format("H:i") : "-" }}
-                                </td>
-                                <td>{{ $pengajuan->jam_selesai ? \Carbon\Carbon::parse($pengajuan->jam_selesai)->format("H:i") : "-" }}
+                                <td>
+                                    @php
+                                        echo JamHelper::formatJam($pengajuan->jam_mulai, $pengajuan->jam_selesai);
+                                    @endphp
                                 </td>
                                 <td>{{ $pengajuan->dosen->nama_dosen ?? "-" }}</td>
                                 <td>

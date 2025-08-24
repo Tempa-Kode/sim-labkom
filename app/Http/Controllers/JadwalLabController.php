@@ -60,6 +60,17 @@ class JadwalLabController extends Controller
             'status_ruang.required' => 'Status ruang harus dipilih.',
         ]);
 
+        // Validasi waktu: tidak bisa membuat jadwal pada hari ini dengan jam yang sudah lewat
+        $hariSekarang = strtolower(\Carbon\Carbon::now()->locale('id')->dayName);
+        if ($request->hari === $hariSekarang) {
+            $jamSekarang = \Carbon\Carbon::now()->format('H:i');
+            if ($request->waktu_selesai < $jamSekarang) {
+                return redirect()->back()->withErrors([
+                    'waktu_mulai' => 'Tidak dapat membuat jadwal pada jam yang sudah lewat untuk hari ini.'
+                ])->withInput();
+            }
+        }
+
         // Cek bentrok jadwal (overlap) pada ruang dan hari yang sama
         $hasConflict = JadwalLaboratorium::where('id_ruang_lab', $request->id_ruang_lab)
             ->where('hari', $request->hari)
@@ -124,6 +135,18 @@ class JadwalLabController extends Controller
             'id_dosen.required' => 'Dosen harus dipilih.',
             'status_ruang.required' => 'Status ruang harus dipilih.',
         ]);
+
+        // Validasi waktu: tidak bisa mengubah jadwal pada hari ini dengan jam yang sudah lewat
+        $hariSekarang = strtolower(\Carbon\Carbon::now()->locale('id')->dayName);
+        if ($request->hari === $hariSekarang) {
+            $jamSekarang = \Carbon\Carbon::now()->format('H:i');
+            if ($request->waktu_selesai < $jamSekarang) {
+                return redirect()->back()->withErrors([
+                    'waktu_mulai' => 'Tidak dapat mengubah jadwal pada jam yang sudah lewat untuk hari ini.'
+                ])->withInput();
+            }
+        }
+
         // Cek bentrok jadwal (overlap) saat update, kecuali diri sendiri
         $hasConflict = JadwalLaboratorium::where('id_ruang_lab', $request->id_ruang_lab)
             ->where('hari', $request->hari)

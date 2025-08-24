@@ -1,3 +1,6 @@
+@php
+    use App\Helpers\JamHelper;
+@endphp
 <!DOCTYPE html>
 <html>
 
@@ -81,8 +84,7 @@
                 <th>No</th>
                 <th>Ruang Laboratorium</th>
                 <th>Hari</th>
-                <th>Waktu Mulai</th>
-                <th>Waktu Selesai</th>
+                <th>Jam Kuliah</th>
                 <th>Dosen</th>
             </tr>
         </thead>
@@ -92,8 +94,11 @@
                     <td>{{ $i + 1 }}</td>
                     <td>{{ $jadwal->ruangLaboratorium->nama_ruang ?? "-" }}</td>
                     <td>{{ $jadwal->hari }}</td>
-                    <td>{{ $jadwal->waktu_mulai }}</td>
-                    <td>{{ $jadwal->waktu_selesai }}</td>
+                    <td>
+                        @php
+                            echo JamHelper::formatJam($jadwal->waktu_mulai, $jadwal->waktu_selesai);
+                        @endphp
+                    </td>
                     <td>{{ $jadwal->dosen->nama_dosen ?? "-" }}</td>
                 </tr>
             @empty
