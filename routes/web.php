@@ -63,7 +63,11 @@ Route::prefix('dashboard')->middleware(['auth'])->group(function () {
         Route::get('/export-excel', [App\Http\Controllers\JadwalLabController::class, 'exportExcel'])->name('jadwalLab.exportExcel');
         // realtime actions
         Route::post('/{id}/status', [App\Http\Controllers\JadwalLabController::class, 'ubahStatus'])->name('jadwalLab.ubahStatus');
-    Route::post('/{id}/notify-selesai', [App\Http\Controllers\JadwalLabController::class, 'notifySelesai'])->name('jadwalLab.notifySelesai');
+        Route::post('/{id}/notify-selesai', [App\Http\Controllers\JadwalLabController::class, 'notifySelesai'])->name('jadwalLab.notifySelesai');
+
+        // Routes untuk rekapan jadwal aslab
+        Route::get('/rekapan-saya', [App\Http\Controllers\JadwalLabController::class, 'rekapanSaya'])->name('jadwalLab.rekapanSaya');
+        Route::get('/export-rekapan-pdf', [App\Http\Controllers\JadwalLabController::class, 'exportRekapanPdf'])->name('jadwalLab.exportRekapanPdf');
     });
 
     // Notifikasi

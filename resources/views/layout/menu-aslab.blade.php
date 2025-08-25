@@ -60,6 +60,10 @@
     <a href="{{ route("jadwalLab.index") }}" class="menu-link">
         <i class="fa-solid fa-calendar-days me-4"></i>
         <div data-i18n="Analytics">Kelola Jadwal Lab</div>
+<li class="menu-item {{ Route::currentRouteNamed("jadwalLab.rekapanSaya") ? "active" : "" }}">
+    <a href="{{ route("jadwalLab.rekapanSaya") }}" class="menu-link">
+        <i class="fa-solid fa-chart-line me-4"></i>
+        <div data-i18n="Analytics">Rekapan Jadwal Saya</div>
     </a>
 </li>
 <li class="menu-item {{ Route::currentRouteNamed("pengajuan.index") ? "active" : "" }}">

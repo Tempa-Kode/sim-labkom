@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\JadwalLaboratorium;
 use App\Models\Notifikasi;
+use App\Models\RekapanJadwalLab;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 
 class JadwalLabController extends Controller
 {
@@ -90,7 +93,11 @@ class JadwalLabController extends Controller
             // Tambahkan ID user yang membuat jadwal
             $validasi['dibuat_oleh'] = auth()->id();
 
-            JadwalLaboratorium::create($validasi);
+            $jadwal = JadwalLaboratorium::create($validasi);
+
+            // Catat ke rekapan
+            $this->catatRekapan($jadwal->id, 'tambah', 'Menambahkan jadwal baru');
+
             DB::commit();
             return redirect()->route('jadwalLab.index')->with('success', 'Jadwal berhasil ditambahkan.');
         } catch (\Exception $e) {
@@ -169,6 +176,10 @@ class JadwalLabController extends Controller
         try {
             $validasi['dibuat_oleh'] = auth()->id();
             $jadwal->update($validasi);
+
+            // Catat ke rekapan
+            $this->catatRekapan($jadwal->id, 'edit', 'Mengedit jadwal');
+
             DB::commit();
             return redirect()->route('jadwalLab.index')->with('success', 'Jadwal berhasil diperbarui.');
         } catch (\Exception $e) {
@@ -188,6 +199,9 @@ class JadwalLabController extends Controller
         }
         DB::beginTransaction();
         try {
+            // Catat ke rekapan sebelum dihapus
+            $this->catatRekapan($jadwal->id, 'hapus', 'Menghapus jadwal');
+
             $jadwal->delete();
             DB::commit();
             return redirect()->route('jadwalLab.index')->with('success', 'Jadwal berhasil dihapus.');
@@ -298,6 +312,10 @@ class JadwalLabController extends Controller
 
         $jadwal->save();
 
+        // Catat ke rekapan
+        $keterangan = $request->status_ruang === 'kosong' ? 'Mengubah status menjadi kosong: ' . $request->alasan_kosong : 'Mengubah status menjadi digunakan';
+        $this->catatRekapan($jadwal->id, 'ubah_status', $keterangan);
+
         // Jika ada alasan batal, buat notifikasi
         if ($request->status_ruang === 'kosong' && $request->filled('alasan_kosong')) {
             Notifikasi::create([
@@ -328,5 +346,78 @@ class JadwalLabController extends Controller
                 'status' => 'baru',
             ]);
             return response()->json(['ok' => true, 'status' => $jadwal->status_ruang]);
+    }
+
+    /**
+     * Fungsi untuk menampilkan rekapan jadwal yang dibuat oleh aslab
+     */
+    public function rekapanSaya(Request $request)
+    {
+        $userId = Auth::id();
+        $query = RekapanJadwalLab::with(['jadwalLab.ruangLaboratorium', 'jadwalLab.dosen'])
+            ->byAslab($userId)
+            ->orderBy('tanggal_aksi', 'desc')
+            ->orderBy('waktu_aksi', 'desc');
+
+        // Filter berdasarkan minggu jika ada
+        if ($request->filled('minggu_mulai')) {
+            $tanggalMulai = $request->minggu_mulai;
+            $query->mingguan($tanggalMulai);
+        }
+
+        $dataRekapan = $query->get();
+
+        // Statistik
+        $totalAksi = $dataRekapan->count();
+        $statistikAksi = $dataRekapan->groupBy('aksi')->map->count();
+
+        return view('jadwal_lab.rekapan_saya', compact('dataRekapan', 'totalAksi', 'statistikAksi'));
+    }
+
+    /**
+     * Fungsi untuk export PDF rekapan jadwal aslab
+     */
+    public function exportRekapanPdf(Request $request)
+    {
+        $userId = Auth::id();
+        $aslab = Auth::user();
+
+        $query = RekapanJadwalLab::with(['jadwalLab.ruangLaboratorium', 'jadwalLab.dosen'])
+            ->byAslab($userId)
+            ->orderBy('tanggal_aksi', 'desc')
+            ->orderBy('waktu_aksi', 'desc');
+
+        // Filter berdasarkan minggu jika ada
+        $periode = 'Semua Data';
+        if ($request->filled('minggu_mulai')) {
+            $tanggalMulai = $request->minggu_mulai;
+            $tanggalSelesai = Carbon::parse($tanggalMulai)->addDays(6)->format('Y-m-d');
+            $query->mingguan($tanggalMulai);
+            $periode = Carbon::parse($tanggalMulai)->locale('id')->translatedFormat('d F Y') . ' - ' . Carbon::parse($tanggalSelesai)->locale('id')->translatedFormat('d F Y');
+        }
+
+        $dataRekapan = $query->get();
+        $totalAksi = $dataRekapan->count();
+        $statistikAksi = $dataRekapan->groupBy('aksi')->map->count();
+
+        $pdf = Pdf::loadView('jadwal_lab.rekapan_pdf', compact('dataRekapan', 'totalAksi', 'statistikAksi', 'aslab', 'periode'));
+        $pdf->setPaper('A4', 'portrait');
+
+        return $pdf->stream('Rekapan_Jadwal_Lab_' . $aslab->nama . '_' . date('Y-m-d_H-i-s') . '.pdf');
+    }
+
+    /**
+     * Helper function untuk mencatat aksi ke tabel rekapan
+     */
+    private function catatRekapan($jadwalId, $aksi, $keterangan = null)
+    {
+        RekapanJadwalLab::create([
+            'id_aslab' => Auth::id(),
+            'id_jadwal_lab' => $jadwalId,
+            'aksi' => $aksi,
+            'keterangan' => $keterangan,
+            'tanggal_aksi' => now()->format('Y-m-d'),
+            'waktu_aksi' => now()->format('H:i:s'),
+        ]);
     }
 }
