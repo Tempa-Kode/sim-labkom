@@ -62,6 +62,7 @@
                             <th>Status</th>
                             <th>Alasan Kosong</th>
                             <th>Sisa Waktu</th>
+                            <th>Kelola Oleh</th>
                             @if (Auth::user()->hak_akses == "aslab")
                                 <th>Aksi</th>
                             @endif
@@ -108,6 +109,9 @@
                                         data-mulai="{{ $jadwal->waktu_mulai }}"
                                         data-selesai="{{ $jadwal->waktu_selesai }}"
                                         data-status="{{ strtolower($jadwal->status_ruang) }}"></span>
+                                </td>
+                                <td>
+                                    {{ $jadwal->pembuatJadwal->nama ?? '-' }}
                                 </td>
                                 @if (Auth::user()->hak_akses == "aslab")
                                     <td>
