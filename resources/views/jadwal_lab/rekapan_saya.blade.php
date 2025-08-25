@@ -95,10 +95,9 @@
             <div class="card-body">
                 <form method="GET" action="{{ route("jadwalLab.rekapanSaya") }}" class="row g-3" id="filterForm">
                     <div class="col-md-4">
-                        <label for="minggu_mulai" class="form-label">Filter Mingguan</label>
+                        <label for="minggu_mulai" class="form-label">Filter Mingguan <small class="text-muted fst-italic">Pilih tanggal awal minggu</small></label>
                         <input type="date" class="form-control" id="minggu_mulai" name="minggu_mulai"
                             value="{{ request("minggu_mulai") }}">
-                        <small class="text-muted">Pilih tanggal awal minggu</small>
                     </div>
                     <div class="col-md-8 d-flex align-items-end">
                         <button type="submit" class="btn btn-primary me-2">

@@ -164,36 +164,11 @@
     <div class="info-section">
         <div class="info-left">
             <strong>Nama Aslab:</strong> {{ $aslab->nama }}<br>
-            <strong>NIM/NIDN:</strong> {{ $aslab->nim_nidn }}<br>
             <strong>Hak Akses:</strong> {{ ucfirst($aslab->hak_akses) }}
         </div>
         <div class="info-right">
             <strong>Periode:</strong> {{ $periode }}<br>
-            <strong>Total Aktivitas:</strong> {{ $totalAksi }}<br>
             <strong>Tanggal Cetak:</strong> {{ date("d F Y, H:i:s") }}
-        </div>
-    </div>
-
-    <!-- Statistics -->
-    <div class="statistics">
-        <h3 style="margin: 0 0 10px 0; text-align: center;">Statistik Aktivitas</h3>
-        <div class="stats-grid">
-            <div class="stats-item">
-                <div class="stats-number">{{ $totalAksi }}</div>
-                <div class="stats-label">Total Aksi</div>
-            </div>
-            <div class="stats-item">
-                <div class="stats-number">{{ $statistikAksi["tambah"] ?? 0 }}</div>
-                <div class="stats-label">Tambah Jadwal</div>
-            </div>
-            <div class="stats-item">
-                <div class="stats-number">{{ $statistikAksi["edit"] ?? 0 }}</div>
-                <div class="stats-label">Edit Jadwal</div>
-            </div>
-            <div class="stats-item">
-                <div class="stats-number">{{ $statistikAksi["ubah_status"] ?? 0 }}</div>
-                <div class="stats-label">Ubah Status</div>
-            </div>
         </div>
     </div>
 
